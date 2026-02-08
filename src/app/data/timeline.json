@@ -1,0 +1,79 @@
+{
+  "events": {
+    "1-1": [
+      { "year": 1863, "title": "Emancipation Proclamation", "description": "President Lincoln's Emancipation Proclamation took effect, freeing enslaved people in Confederate states." }
+    ],
+    "1-15": [
+      { "year": 1929, "title": "Martin Luther King Jr. Born", "description": "Civil rights leader Dr. Martin Luther King Jr. was born in Atlanta, Georgia." }
+    ],
+    "2-1": [
+      { "year": 1902, "title": "Langston Hughes Born", "description": "Legendary poet and leader of the Harlem Renaissance was born in Joplin, Missouri." },
+      { "year": 1960, "title": "Greensboro Sit-ins Begin", "description": "Four Black college students began a sit-in at a segregated Woolworth's lunch counter." },
+      { "year": 1865, "title": "13th Amendment Signed", "description": "President Lincoln signed the resolution proposing the 13th Amendment to abolish slavery." }
+    ],
+    "2-2": [
+      { "year": 1948, "title": "Truman's Civil Rights Message", "description": "President Truman sent a special message to Congress on civil rights." },
+      { "year": 1897, "title": "Alfred L. Cralle Patents Ice Cream Scoop", "description": "Black inventor Alfred L. Cralle patented the ice cream scoop." }
+    ],
+    "2-3": [
+      { "year": 1870, "title": "15th Amendment Ratified", "description": "The 15th Amendment was ratified, prohibiting denial of voting rights based on race." },
+      { "year": 1956, "title": "Autherine Lucy at University of Alabama", "description": "Autherine Lucy became the first Black student to attend the University of Alabama." }
+    ],
+    "2-4": [
+      { "year": 1913, "title": "Rosa Parks Born", "description": "Civil rights activist Rosa Parks was born in Tuskegee, Alabama." },
+      { "year": 1794, "title": "France Abolishes Slavery", "description": "Revolutionary France became the first European power to abolish slavery." }
+    ],
+    "2-5": [
+      { "year": 1934, "title": "Hank Aaron Born", "description": "Baseball legend Hank Aaron was born in Mobile, Alabama." },
+      { "year": 1988, "title": "Jesse Jackson Wins Primaries", "description": "Jesse Jackson won presidential primaries in Alabama and Georgia." }
+    ],
+    "2-6": [
+      { "year": 1820, "title": "First Great Migration", "description": "86 free Black Americans sailed from New York to Sierra Leone, marking early African colonization." },
+      { "year": 1945, "title": "Bob Marley Born", "description": "Reggae legend Bob Marley was born in Nine Mile, Jamaica." }
+    ],
+    "2-7": [
+      { "year": 1926, "title": "Negro History Week Begins", "description": "Carter G. Woodson launched the first Negro History Week, precursor to Black History Month." },
+      { "year": 1990, "title": "South African Ban Lifted", "description": "The South African government lifted its ban on the African National Congress." }
+    ],
+    "2-8": [
+      { "year": 1968, "title": "Orangeburg Massacre", "description": "Three Black students were killed by South Carolina Highway Patrol during a protest." },
+      { "year": 1910, "title": "Boy Scouts Integrated Vision", "description": "The Boy Scouts of America was founded with a vision that would eventually include all races." }
+    ],
+    "2-9": [
+      { "year": 1944, "title": "Alice Walker Born", "description": "Pulitzer Prize-winning author Alice Walker was born in Eatonton, Georgia." }
+    ],
+    "2-10": [
+      { "year": 1992, "title": "Alex Haley Passes", "description": "Author of 'Roots' Alex Haley passed away, leaving an incredible literary legacy." },
+      { "year": 1927, "title": "Leontyne Price Born", "description": "Opera legend Leontyne Price was born in Laurel, Mississippi." }
+    ],
+    "2-21": [
+      { "year": 1965, "title": "Malcolm X Assassinated", "description": "Civil rights leader Malcolm X was assassinated in New York City." }
+    ],
+    "2-23": [
+      { "year": 1868, "title": "W.E.B. Du Bois Born", "description": "Sociologist and NAACP co-founder W.E.B. Du Bois was born in Massachusetts." }
+    ],
+    "4-4": [
+      { "year": 1968, "title": "Martin Luther King Jr. Assassinated", "description": "Dr. Martin Luther King Jr. was assassinated in Memphis, Tennessee." }
+    ],
+    "5-17": [
+      { "year": 1954, "title": "Brown v. Board of Education", "description": "Supreme Court ruled that racial segregation in public schools was unconstitutional." }
+    ],
+    "6-19": [
+      { "year": 1865, "title": "Juneteenth", "description": "News of emancipation reached Texas, marking the end of slavery in the last Confederate state." }
+    ],
+    "8-28": [
+      { "year": 1963, "title": "March on Washington", "description": "Over 250,000 people gathered for the March on Washington where MLK delivered 'I Have a Dream' speech." },
+      { "year": 1955, "title": "Emmett Till Murdered", "description": "14-year-old Emmett Till was murdered in Mississippi, galvanizing the civil rights movement." }
+    ],
+    "12-1": [
+      { "year": 1955, "title": "Rosa Parks Arrested", "description": "Rosa Parks was arrested for refusing to give up her bus seat, sparking the Montgomery Bus Boycott." }
+    ],
+    "default": [
+      { "year": 1619, "title": "First Africans Arrive in America", "description": "The first recorded Africans arrived in the English colonies at Point Comfort, Virginia." },
+      { "year": 1865, "title": "End of Civil War", "description": "The Civil War ended, beginning the era of Reconstruction." },
+      { "year": 1954, "title": "Brown v. Board of Education", "description": "Supreme Court ruled that racial segregation in public schools was unconstitutional." },
+      { "year": 1963, "title": "March on Washington", "description": "Over 250,000 gathered for the March on Washington, where MLK delivered 'I Have a Dream' speech." },
+      { "year": 2008, "title": "Barack Obama Elected", "description": "Barack Obama was elected as the 44th President, becoming the first Black president of the United States." }
+    ]
+  }
+}

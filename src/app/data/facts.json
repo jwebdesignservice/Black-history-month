@@ -1,0 +1,144 @@
+{
+  "facts": [
+    {
+      "id": 1,
+      "category": "Invention",
+      "title": "The Traffic Light",
+      "fact": "Garrett Morgan, a Black inventor, patented the three-position traffic signal in 1923. His design was the precursor to modern traffic lights used worldwide today.",
+      "year": 1923
+    },
+    {
+      "id": 2,
+      "category": "Science",
+      "title": "Blood Banks",
+      "fact": "Dr. Charles Drew pioneered methods of storing blood plasma for transfusion and organized the first large-scale blood bank in the US. His research saved countless lives during WWII.",
+      "year": 1940
+    },
+    {
+      "id": 3,
+      "category": "Achievement",
+      "title": "First Black Billionaire",
+      "fact": "Robert L. Johnson became the first Black American billionaire in 2001 after selling BET (Black Entertainment Television) to Viacom for $3 billion.",
+      "year": 2001
+    },
+    {
+      "id": 4,
+      "category": "Culture",
+      "title": "The Harlem Renaissance",
+      "fact": "The Harlem Renaissance (1920s-1930s) was a cultural explosion that produced some of America's greatest literature, music, and art, including jazz and the works of Langston Hughes and Zora Neale Hurston.",
+      "year": 1920
+    },
+    {
+      "id": 5,
+      "category": "Invention",
+      "title": "The Super Soaker",
+      "fact": "Lonnie Johnson, a NASA engineer, invented the Super Soaker water gun in 1989. It became one of the top-selling toys in America and has generated over $1 billion in sales.",
+      "year": 1989
+    },
+    {
+      "id": 6,
+      "category": "History",
+      "title": "The Green Book",
+      "fact": "From 1936-1966, 'The Negro Motorist Green Book' helped Black travelers navigate safely through Jim Crow America, listing friendly businesses, hotels, and restaurants.",
+      "year": 1936
+    },
+    {
+      "id": 7,
+      "category": "Science",
+      "title": "Hidden Figures",
+      "fact": "Katherine Johnson, Dorothy Vaughan, and Mary Jackson were NASA mathematicians whose calculations were critical to early space missions, including John Glenn's orbital flight.",
+      "year": 1962
+    },
+    {
+      "id": 8,
+      "category": "Music",
+      "title": "Rock and Roll Origins",
+      "fact": "Rock and roll was pioneered by Black musicians like Chuck Berry, Little Richard, and Sister Rosetta Tharpe, whose guitar techniques and performance styles defined the genre.",
+      "year": 1950
+    },
+    {
+      "id": 9,
+      "category": "Achievement",
+      "title": "First Black Supreme Court Justice",
+      "fact": "Thurgood Marshall, who argued Brown v. Board of Education, became the first Black Supreme Court Justice in 1967, serving for 24 years.",
+      "year": 1967
+    },
+    {
+      "id": 10,
+      "category": "Invention",
+      "title": "The Home Security System",
+      "fact": "Marie Van Brittan Brown invented the first home security system in 1966, including closed-circuit television monitoring. Her patent laid groundwork for modern security technology.",
+      "year": 1966
+    },
+    {
+      "id": 11,
+      "category": "History",
+      "title": "The Black Wall Street",
+      "fact": "Greenwood District in Tulsa, Oklahoma was known as 'Black Wall Street' - a thriving, prosperous Black community destroyed in the 1921 Tulsa Race Massacre.",
+      "year": 1921
+    },
+    {
+      "id": 12,
+      "category": "Culture",
+      "title": "Hip Hop Origins",
+      "fact": "Hip hop was born in the Bronx in 1973 when DJ Kool Herc pioneered the breakbeat technique at a back-to-school party. It grew into a global cultural movement.",
+      "year": 1973
+    },
+    {
+      "id": 13,
+      "category": "Science",
+      "title": "Open-Heart Surgery Pioneer",
+      "fact": "Dr. Daniel Hale Williams performed one of the first successful open-heart surgeries in 1893 and founded Provident Hospital, the first Black-owned hospital in America.",
+      "year": 1893
+    },
+    {
+      "id": 14,
+      "category": "Invention",
+      "title": "The Gas Mask",
+      "fact": "Garrett Morgan also invented the safety hood (an early gas mask) in 1914. He used it to rescue workers trapped in a tunnel explosion under Lake Erie.",
+      "year": 1914
+    },
+    {
+      "id": 15,
+      "category": "Achievement",
+      "title": "First Black Astronaut",
+      "fact": "Guion Bluford became the first Black American in space when he flew aboard the Space Shuttle Challenger in August 1983.",
+      "year": 1983
+    },
+    {
+      "id": 16,
+      "category": "Culture",
+      "title": "Motown Records",
+      "fact": "Berry Gordy founded Motown Records in 1959 with an $800 loan. It became the most successful Black-owned business in America, launching artists like Stevie Wonder, The Supremes, and Marvin Gaye.",
+      "year": 1959
+    },
+    {
+      "id": 17,
+      "category": "History",
+      "title": "The Underground Railroad",
+      "fact": "Harriet Tubman made 13 missions to rescue approximately 70 enslaved people using the Underground Railroad, earning her the nickname 'Moses.'",
+      "year": 1850
+    },
+    {
+      "id": 18,
+      "category": "Science",
+      "title": "Peanut Innovations",
+      "fact": "George Washington Carver developed over 300 products from peanuts, including dyes, plastics, and gasoline. His work revolutionized Southern agriculture.",
+      "year": 1915
+    },
+    {
+      "id": 19,
+      "category": "Achievement",
+      "title": "Nobel Peace Prize",
+      "fact": "Dr. Martin Luther King Jr. became the youngest person to receive the Nobel Peace Prize in 1964 at age 35 for his nonviolent resistance to racial prejudice.",
+      "year": 1964
+    },
+    {
+      "id": 20,
+      "category": "Invention",
+      "title": "Automatic Elevator Doors",
+      "fact": "Alexander Miles patented an automatic elevator door mechanism in 1887 that made elevators safer and is still used in modern elevator designs.",
+      "year": 1887
+    }
+  ]
+}

@@ -1,0 +1,263 @@
+@import "tailwindcss";
+
+:root {
+  /* Newspaper color palette */
+  --paper-cream: #FFFFFF;
+  --paper-aged: #F8F8F8;
+  --ink-black: #1A1A1A;
+  --ink-faded: #3D3D3D;
+  
+  /* Pan-African accent colors */
+  --accent-red: #CE1126;
+  --accent-gold: #FCD116;
+  --accent-green: #006B3F;
+  
+  /* Comic/cartoon borders */
+  --border-thick: 4px;
+  --border-medium: 3px;
+  --border-thin: 2px;
+  
+  /* Shadows for depth */
+  --shadow-cartoon: 4px 4px 0px var(--ink-black);
+  --shadow-subtle: 2px 2px 0px rgba(0,0,0,0.3);
+}
+
+@theme inline {
+  --font-playfair: var(--font-playfair);
+  --font-garamond: var(--font-garamond);
+  --font-typewriter: var(--font-typewriter);
+}
+
+/* Base styles */
+body {
+  background: var(--paper-cream);
+  color: var(--ink-black);
+  font-family: var(--font-garamond), Georgia, serif;
+  min-height: 100vh;
+}
+
+/* Newspaper section styling */
+.newspaper-section {
+  border: var(--border-thick) solid var(--ink-black);
+  background: var(--paper-cream);
+  box-shadow: var(--shadow-cartoon);
+  position: relative;
+}
+
+.newspaper-section::before {
+  content: '';
+  position: absolute;
+  top: -2px;
+  left: -2px;
+  right: -2px;
+  bottom: -2px;
+  border: var(--border-thin) solid var(--ink-black);
+  pointer-events: none;
+}
+
+/* Headline styling */
+.headline {
+  font-family: var(--font-playfair), serif;
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  line-height: 1.1;
+}
+
+.subheadline {
+  font-family: var(--font-playfair), serif;
+  font-weight: 700;
+  font-style: italic;
+}
+
+/* Body text */
+.body-text {
+  font-family: var(--font-garamond), Georgia, serif;
+  line-height: 1.6;
+  text-align: justify;
+  hyphens: auto;
+}
+
+/* Typewriter style for special elements */
+.typewriter {
+  font-family: var(--font-typewriter), monospace;
+}
+
+/* Decorative dividers */
+.newspaper-divider {
+  height: var(--border-medium);
+  background: var(--ink-black);
+  margin: 1.5rem auto;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.newspaper-divider::before,
+.newspaper-divider::after {
+  content: '◆';
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  background: var(--paper-cream);
+  padding: 0 0.5rem;
+  font-size: 0.75rem;
+}
+
+.newspaper-divider::before {
+  left: 50%;
+  transform: translate(-50%, -50%);
+  margin-left: -2rem;
+}
+
+.newspaper-divider::after {
+  right: 50%;
+  transform: translate(50%, -50%);
+  margin-right: -2rem;
+}
+
+/* Double line decorative borders */
+.double-border-top {
+  border-top: var(--border-thick) double var(--ink-black);
+  padding-top: 1rem;
+}
+
+.double-border-bottom {
+  border-bottom: var(--border-thick) double var(--ink-black);
+  padding-bottom: 1rem;
+}
+
+/* Speech bubble for chatbot */
+.speech-bubble {
+  position: relative;
+  background: white;
+  border: var(--border-thick) solid var(--ink-black);
+  border-radius: 20px;
+  box-shadow: var(--shadow-cartoon);
+}
+
+.speech-bubble::after {
+  content: '';
+  position: absolute;
+  bottom: -20px;
+  left: 30px;
+  border-width: 20px 15px 0;
+  border-style: solid;
+  border-color: var(--ink-black) transparent transparent;
+}
+
+.speech-bubble::before {
+  content: '';
+  position: absolute;
+  bottom: -12px;
+  left: 33px;
+  border-width: 15px 12px 0;
+  border-style: solid;
+  border-color: white transparent transparent;
+  z-index: 1;
+}
+
+/* Halftone effect for images */
+.halftone {
+  position: relative;
+  overflow: hidden;
+}
+
+.halftone::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image: radial-gradient(circle, var(--ink-black) 1px, transparent 1px);
+  background-size: 4px 4px;
+  mix-blend-mode: multiply;
+  opacity: 0.3;
+  pointer-events: none;
+}
+
+/* Column layout */
+.newspaper-columns {
+  column-count: 2;
+  column-gap: 2rem;
+  column-rule: var(--border-thin) solid var(--ink-black);
+}
+
+@media (min-width: 1024px) {
+  .newspaper-columns-3 {
+    column-count: 3;
+  }
+}
+
+@media (max-width: 768px) {
+  .newspaper-columns {
+    column-count: 1;
+  }
+}
+
+/* Accent color utility classes */
+.accent-red {
+  color: var(--accent-red);
+}
+
+.accent-gold {
+  color: var(--accent-gold);
+}
+
+.accent-green {
+  color: var(--accent-green);
+}
+
+.bg-accent-red {
+  background-color: var(--accent-red);
+}
+
+.bg-accent-gold {
+  background-color: var(--accent-gold);
+}
+
+.bg-accent-green {
+  background-color: var(--accent-green);
+}
+
+/* Drop cap for first letter */
+.drop-cap::first-letter {
+  float: left;
+  font-family: var(--font-playfair), serif;
+  font-size: 4rem;
+  font-weight: 900;
+  line-height: 0.8;
+  padding-right: 0.5rem;
+  padding-top: 0.25rem;
+  color: var(--accent-red);
+}
+
+/* Scrollbar styling */
+::-webkit-scrollbar {
+  width: 12px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--paper-aged);
+  border-left: var(--border-thin) solid var(--ink-black);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--ink-black);
+  border: 2px solid var(--paper-aged);
+}
+
+/* Animation for cartoon feel */
+@keyframes wiggle {
+  0%, 100% { transform: rotate(-1deg); }
+  50% { transform: rotate(1deg); }
+}
+
+.wiggle-hover:hover {
+  animation: wiggle 0.3s ease-in-out;
+}
+
+/* Selection styling */
+::selection {
+  background: var(--accent-gold);
+  color: var(--ink-black);
+}

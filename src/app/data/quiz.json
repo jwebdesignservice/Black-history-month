@@ -1,0 +1,164 @@
+{
+  "questions": [
+    {
+      "id": 1,
+      "question": "Who was the first Black woman to win an Academy Award?",
+      "options": ["Dorothy Dandridge", "Hattie McDaniel", "Whoopi Goldberg", "Halle Berry"],
+      "correctAnswer": 1,
+      "explanation": "Hattie McDaniel won the Oscar for Best Supporting Actress in 1940 for her role in 'Gone with the Wind', becoming the first Black American to win an Academy Award.",
+      "difficulty": "medium"
+    },
+    {
+      "id": 2,
+      "question": "The 'I Have a Dream' speech was delivered during which event?",
+      "options": ["Selma to Montgomery March", "March on Washington", "Million Man March", "Freedom Summer"],
+      "correctAnswer": 1,
+      "explanation": "Dr. Martin Luther King Jr. delivered his iconic 'I Have a Dream' speech during the March on Washington on August 28, 1963.",
+      "difficulty": "easy"
+    },
+    {
+      "id": 3,
+      "question": "What did Madam C.J. Walker become famous for?",
+      "options": ["Civil rights activism", "Becoming the first female self-made millionaire in America", "Inventing the telephone", "Writing novels"],
+      "correctAnswer": 1,
+      "explanation": "Madam C.J. Walker (Sarah Breedlove) created a line of hair care products and built a business empire, becoming the first female self-made millionaire in America.",
+      "difficulty": "medium"
+    },
+    {
+      "id": 4,
+      "question": "Which city is considered the birthplace of jazz music?",
+      "options": ["Chicago", "New York", "New Orleans", "Memphis"],
+      "correctAnswer": 2,
+      "explanation": "New Orleans is widely recognized as the birthplace of jazz, where it emerged in the early 20th century from a blend of African and European musical traditions.",
+      "difficulty": "easy"
+    },
+    {
+      "id": 5,
+      "question": "Who wrote the autobiography 'I Know Why the Caged Bird Sings'?",
+      "options": ["Toni Morrison", "Maya Angelou", "Alice Walker", "Zora Neale Hurston"],
+      "correctAnswer": 1,
+      "explanation": "Maya Angelou wrote this powerful autobiography in 1969, detailing her early years and the challenges she faced growing up as a Black woman in America.",
+      "difficulty": "easy"
+    },
+    {
+      "id": 6,
+      "question": "The Tuskegee Airmen were the first Black military aviators in which branch?",
+      "options": ["U.S. Navy", "U.S. Marines", "U.S. Army Air Corps", "U.S. Coast Guard"],
+      "correctAnswer": 2,
+      "explanation": "The Tuskegee Airmen were the first Black military aviators in the U.S. Army Air Corps during World War II, overcoming discrimination to become highly decorated pilots.",
+      "difficulty": "medium"
+    },
+    {
+      "id": 7,
+      "question": "What did Carter G. Woodson create that later became Black History Month?",
+      "options": ["Black History Day", "Negro History Week", "African Heritage Month", "Freedom Week"],
+      "correctAnswer": 1,
+      "explanation": "Carter G. Woodson, known as the 'Father of Black History,' created Negro History Week in 1926, which was later expanded to Black History Month in 1976.",
+      "difficulty": "hard"
+    },
+    {
+      "id": 8,
+      "question": "Which Black inventor created an improved filament for the light bulb?",
+      "options": ["Garrett Morgan", "Lewis Latimer", "George Washington Carver", "Elijah McCoy"],
+      "correctAnswer": 1,
+      "explanation": "Lewis Latimer worked with Thomas Edison and invented an improved carbon filament that made light bulbs more practical and longer-lasting.",
+      "difficulty": "hard"
+    },
+    {
+      "id": 9,
+      "question": "The Black Panther Party was founded in which year?",
+      "options": ["1960", "1963", "1966", "1970"],
+      "correctAnswer": 2,
+      "explanation": "The Black Panther Party was founded in Oakland, California in 1966 by Huey P. Newton and Bobby Seale.",
+      "difficulty": "medium"
+    },
+    {
+      "id": 10,
+      "question": "Who was the first Black woman in space?",
+      "options": ["Mae C. Jemison", "Stephanie Wilson", "Joan Higginbotham", "Jeanette Epps"],
+      "correctAnswer": 0,
+      "explanation": "Mae C. Jemison became the first Black woman in space when she flew aboard the Space Shuttle Endeavour in September 1992.",
+      "difficulty": "medium"
+    },
+    {
+      "id": 11,
+      "question": "What was the name of the first major Black newspaper in America?",
+      "options": ["The Chicago Defender", "The Pittsburgh Courier", "Freedom's Journal", "The North Star"],
+      "correctAnswer": 2,
+      "explanation": "Freedom's Journal, founded in 1827 by John Russwurm and Samuel Cornish, was the first Black-owned and operated newspaper in the United States.",
+      "difficulty": "hard"
+    },
+    {
+      "id": 12,
+      "question": "Which law did Rosa Parks' bus boycott help lead to?",
+      "options": ["Civil Rights Act of 1964", "Voting Rights Act of 1965", "Browder v. Gayle ruling", "13th Amendment"],
+      "correctAnswer": 2,
+      "explanation": "The Montgomery Bus Boycott led to the Browder v. Gayle Supreme Court ruling that declared bus segregation unconstitutional.",
+      "difficulty": "hard"
+    },
+    {
+      "id": 13,
+      "question": "Who founded the Tuskegee Institute?",
+      "options": ["W.E.B. Du Bois", "Booker T. Washington", "Frederick Douglass", "George Washington Carver"],
+      "correctAnswer": 1,
+      "explanation": "Booker T. Washington founded the Tuskegee Institute (now Tuskegee University) in Alabama in 1881 as a school for Black students.",
+      "difficulty": "medium"
+    },
+    {
+      "id": 14,
+      "question": "What year was the NAACP founded?",
+      "options": ["1905", "1909", "1915", "1920"],
+      "correctAnswer": 1,
+      "explanation": "The National Association for the Advancement of Colored People (NAACP) was founded in 1909 in response to the 1908 Springfield Race Riot.",
+      "difficulty": "medium"
+    },
+    {
+      "id": 15,
+      "question": "Who was the first Black American to earn a PhD from Harvard?",
+      "options": ["W.E.B. Du Bois", "Carter G. Woodson", "Booker T. Washington", "Charles Drew"],
+      "correctAnswer": 0,
+      "explanation": "W.E.B. Du Bois became the first Black American to earn a PhD from Harvard University in 1895.",
+      "difficulty": "hard"
+    },
+    {
+      "id": 16,
+      "question": "Which boxer refused to be drafted for the Vietnam War, citing religious beliefs?",
+      "options": ["Joe Louis", "Sugar Ray Robinson", "Muhammad Ali", "Floyd Patterson"],
+      "correctAnswer": 2,
+      "explanation": "Muhammad Ali refused military service in 1967, was stripped of his boxing titles, and became an icon of resistance and principle.",
+      "difficulty": "easy"
+    },
+    {
+      "id": 17,
+      "question": "What was Juneteenth originally called?",
+      "options": ["Freedom Day", "Jubilee Day", "Emancipation Day", "All of the above"],
+      "correctAnswer": 3,
+      "explanation": "Juneteenth has been known by various names including Freedom Day, Jubilee Day, Liberation Day, and Emancipation Day.",
+      "difficulty": "medium"
+    },
+    {
+      "id": 18,
+      "question": "Who was the first Black person to serve in the U.S. Senate?",
+      "options": ["Hiram Revels", "Blanche Bruce", "Edward Brooke", "Barack Obama"],
+      "correctAnswer": 0,
+      "explanation": "Hiram Revels became the first Black U.S. Senator when he was elected to represent Mississippi in 1870.",
+      "difficulty": "hard"
+    },
+    {
+      "id": 19,
+      "question": "The phrase 'Black is Beautiful' became popular during which era?",
+      "options": ["1920s Harlem Renaissance", "1950s Civil Rights", "1960s Black Power", "1990s Hip Hop"],
+      "correctAnswer": 2,
+      "explanation": "The phrase 'Black is Beautiful' became a widely-used affirmation during the Black Power movement of the 1960s and 1970s.",
+      "difficulty": "easy"
+    },
+    {
+      "id": 20,
+      "question": "Who invented the folding cabinet bed (precursor to the Murphy bed)?",
+      "options": ["Sarah Goode", "Lewis Latimer", "Elijah McCoy", "Jan Matzeliger"],
+      "correctAnswer": 0,
+      "explanation": "Sarah E. Goode became the first Black woman to receive a U.S. patent in 1885 for her folding cabinet bed design.",
+      "difficulty": "hard"
+    }
+  ]
+}
