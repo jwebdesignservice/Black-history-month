@@ -31,15 +31,43 @@
 /* Base styles */
 body {
   background: var(--paper-cream);
+  background-image: url('/white-paper-texture-background.jpg');
+  background-size: cover;
+  background-attachment: fixed;
+  background-position: center;
   color: var(--ink-black);
   font-family: var(--font-garamond), Georgia, serif;
   min-height: 100vh;
+  position: relative;
+}
+
+/* Add subtle overlay to enhance the paper effect */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background: 
+    linear-gradient(
+      to bottom,
+      rgba(255, 255, 255, 0.1) 0%,
+      rgba(248, 245, 240, 0.05) 50%,
+      rgba(255, 255, 255, 0.1) 100%
+    );
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* Ensure content is above the overlay */
+body > * {
+  position: relative;
+  z-index: 1;
 }
 
 /* Newspaper section styling */
 .newspaper-section {
   border: var(--border-thick) solid var(--ink-black);
-  background: var(--paper-cream);
+  background: rgba(255, 255, 255, 0.92);
+  backdrop-filter: blur(1px);
   box-shadow: var(--shadow-cartoon);
   position: relative;
 }
