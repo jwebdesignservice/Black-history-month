@@ -10,16 +10,21 @@ import {
   Heart, 
   Scissors, 
   Type,
-  ChevronDown
+  ChevronDown,
+  Music,
+  Crown,
+  Mic2
 } from 'lucide-react';
 
 export type ChatMode = 
   | 'historian' 
+  | 'streetwise'
   | 'morgan' 
   | 'jamaican' 
-  | 'unfiltered' 
   | 'grandma' 
-  | 'barbershop';
+  | 'barbershop'
+  | 'hiphop'
+  | 'preacher';
 
 interface ModeSelectorProps {
   currentMode: ChatMode;
@@ -51,9 +56,17 @@ const textModes: ModeInfo[] = [
     id: 'historian',
     name: 'Historian Narrator',
     shortName: 'Historian',
-    description: 'Documentary-style wisdom',
+    description: 'Documentary-style wisdom - click topics to explore',
     icon: <BookOpen size={18} />,
     color: 'var(--accent-red)'
+  },
+  {
+    id: 'streetwise',
+    name: 'Street Talk',
+    shortName: 'Street',
+    description: 'Raw, unfiltered gangster energy',
+    icon: <Flame size={18} />,
+    color: '#1a1a1a'
   },
   {
     id: 'jamaican',
@@ -62,14 +75,6 @@ const textModes: ModeInfo[] = [
     description: 'Caribbean patois energy',
     icon: <Sun size={18} />,
     color: 'var(--accent-green)'
-  },
-  {
-    id: 'unfiltered',
-    name: 'Unfiltered Real Talk',
-    shortName: 'Real Talk',
-    description: 'No filter, all facts',
-    icon: <Flame size={18} />,
-    color: '#8B4513'
   },
   {
     id: 'grandma',
@@ -86,6 +91,22 @@ const textModes: ModeInfo[] = [
     description: 'Debate & discussion',
     icon: <Scissors size={18} />,
     color: '#4A90A4'
+  },
+  {
+    id: 'hiphop',
+    name: 'Hip-Hop Head',
+    shortName: 'Hip-Hop',
+    description: 'Culture through bars & beats',
+    icon: <Music size={18} />,
+    color: '#9333ea'
+  },
+  {
+    id: 'preacher',
+    name: 'Sunday Preacher',
+    shortName: 'Preacher',
+    description: 'Black church energy & wisdom',
+    icon: <Crown size={18} />,
+    color: '#7c3aed'
   }
 ];
 

@@ -19,11 +19,13 @@ const STORAGE_KEY = 'blackHistoryChronicle_chatHistory';
 export default function ChatBot() {
   const [chatHistory, setChatHistory] = useState<ChatHistory>({
     historian: [],
+    streetwise: [],
     morgan: [],
     jamaican: [],
-    unfiltered: [],
     grandma: [],
-    barbershop: []
+    barbershop: [],
+    hiphop: [],
+    preacher: []
   });
   const [input, setInput] = useState('');
   const [isLoading, setIsLoading] = useState(false);
@@ -150,23 +152,41 @@ export default function ChatBot() {
   const getModeColor = (mode: ChatMode) => {
     const colors: Record<ChatMode, string> = {
       historian: 'var(--accent-red)',
+      streetwise: '#1a1a1a',
       morgan: 'var(--accent-gold)',
       jamaican: 'var(--accent-green)',
-      unfiltered: '#8B4513',
       grandma: '#D4A574',
-      barbershop: '#4A90A4'
+      barbershop: '#4A90A4',
+      hiphop: '#9333ea',
+      preacher: '#7c3aed'
     };
     return colors[mode];
   };
 
+  // Interactive topics for Historian mode
+  const historianTopics = [
+    { era: "Ancient Africa", years: "3000 BCE - 500 CE", question: "Tell me about the great ancient African civilizations" },
+    { era: "Slave Trade Era", years: "1500s - 1800s", question: "What was the transatlantic slave trade and its impact?" },
+    { era: "Civil Rights", years: "1954 - 1968", question: "Tell me about the Civil Rights Movement" },
+    { era: "Harlem Renaissance", years: "1920s - 1930s", question: "What was the Harlem Renaissance?" },
+    { era: "Black Power", years: "1960s - 1970s", question: "Tell me about the Black Power movement" },
+    { era: "Modern Era", years: "1990s - Present", question: "What are the major achievements in modern Black history?" }
+  ];
+
+  const handleTopicClick = (question: string) => {
+    setInput(question);
+  };
+
   const getWelcomeMessage = () => {
     const welcomes: Record<ChatMode, string> = {
-      historian: "Greetings, seeker of knowledge. I am your guide through the rich tapestry of Black history. What would you like to explore today?",
+      historian: "Greetings, seeker of knowledge. I am your guide through the rich tapestry of Black history. Select an era below to explore, or ask me anything about Black history worldwide.",
+      streetwise: "Yo, what's good my G? Real talk, I'ma keep it a hunnid wit you - no cap, no filter, just straight facts from the streets. What you tryna know?",
       morgan: "Well now... *settles into chair* ...I've been waiting for you. There's a story to tell, and every story has a beginning. What shall we discuss?",
       jamaican: "Wagwan mi friend! Bless up and welcome! Mi ready fi reason wit yuh bout anyting. What a gwaan pon yuh mind today?",
-      unfiltered: "Aight, what's good? I'm here to keep it 100 with you, no filter, no sugarcoating. What you wanna talk about?",
       grandma: "Oh baby, come on in and sit down! Let me get you something... Now, what's on your heart today, child?",
-      barbershop: "Aye, what's up! Pull up a chair, we debating everything today. Facts only though. What's the topic?"
+      barbershop: "Aye, what's up! Pull up a chair, we debating everything today. Facts only though. What's the topic?",
+      hiphop: "Yo, what's poppin'! You already know hip-hop IS Black history. From the Bronx to the globe, we changed the game. What you wanna know about the culture?",
+      preacher: "Well, GLORY! Come on in, come on in! The Lord has put something on my heart to share with you today. What wisdom are you seeking, beloved?"
     };
     return welcomes[currentMode];
   };
@@ -228,8 +248,30 @@ export default function ChatBot() {
             animate={{ opacity: 1, y: 0 }}
             className="flex justify-start mb-4"
           >
-            <div className="speech-bubble p-4 max-w-[85%] md:max-w-[75%]">
+            <div className="speech-bubble p-4 max-w-[95%] md:max-w-[85%]">
               <p className="body-text">{getWelcomeMessage()}</p>
+              
+              {/* Interactive Topics for Historian Mode */}
+              {currentMode === 'historian' && (
+                <div className="mt-4 pt-4 border-t-2 border-[var(--ink-faded)]">
+                  <p className="text-xs typewriter mb-3 opacity-75">★ EXPLORE BY ERA:</p>
+                  <div className="grid grid-cols-2 md:grid-cols-3 gap-2">
+                    {historianTopics.map((topic, index) => (
+                      <motion.button
+                        key={index}
+                        onClick={() => handleTopicClick(topic.question)}
+                        whileHover={{ scale: 1.02 }}
+                        whileTap={{ scale: 0.98 }}
+                        className="text-left p-3 border-2 border-[var(--ink-black)] bg-[var(--paper-cream)] hover:bg-[var(--accent-gold)] hover:text-[var(--ink-black)] transition-all"
+                        style={{ boxShadow: '2px 2px 0px var(--ink-black)' }}
+                      >
+                        <span className="font-bold text-sm block">{topic.era}</span>
+                        <span className="text-xs opacity-75">{topic.years}</span>
+                      </motion.button>
+                    ))}
+                  </div>
+                </div>
+              )}
             </div>
           </motion.div>
         )}
