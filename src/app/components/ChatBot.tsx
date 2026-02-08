@@ -16,17 +16,20 @@ type ChatHistory = Record<ChatMode, Message[]>;
 
 const STORAGE_KEY = 'blackHistoryChronicle_chatHistory';
 
+// Default empty history for all modes
+const getDefaultHistory = (): ChatHistory => ({
+  historian: [],
+  streetwise: [],
+  morgan: [],
+  jamaican: [],
+  grandma: [],
+  barbershop: [],
+  hiphop: [],
+  preacher: []
+});
+
 export default function ChatBot() {
-  const [chatHistory, setChatHistory] = useState<ChatHistory>({
-    historian: [],
-    streetwise: [],
-    morgan: [],
-    jamaican: [],
-    grandma: [],
-    barbershop: [],
-    hiphop: [],
-    preacher: []
-  });
+  const [chatHistory, setChatHistory] = useState<ChatHistory>(getDefaultHistory());
   const [input, setInput] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [currentMode, setCurrentMode] = useState<ChatMode>('historian');
@@ -35,8 +38,8 @@ export default function ChatBot() {
   const messagesContainerRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
 
-  // Get current messages for the active mode
-  const messages = chatHistory[currentMode];
+  // Get current messages for the active mode - with fallback to empty array
+  const messages = chatHistory[currentMode] || [];
 
   // Load chat history from localStorage on mount
   useEffect(() => {
@@ -44,7 +47,19 @@ export default function ChatBot() {
     if (saved) {
       try {
         const parsed = JSON.parse(saved);
-        setChatHistory(parsed);
+        // Merge saved history with default to ensure all modes exist
+        const defaultHistory = getDefaultHistory();
+        const mergedHistory: ChatHistory = {
+          ...defaultHistory,
+          ...parsed
+        };
+        // Ensure each mode has an array (not undefined)
+        for (const mode of Object.keys(defaultHistory) as ChatMode[]) {
+          if (!Array.isArray(mergedHistory[mode])) {
+            mergedHistory[mode] = [];
+          }
+        }
+        setChatHistory(mergedHistory);
       } catch (e) {
         console.error('Failed to parse saved chat history:', e);
       }
