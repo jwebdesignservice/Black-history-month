@@ -31,14 +31,24 @@
 /* Base styles */
 body {
   background: var(--paper-cream);
-  background-image: url('/white-paper-texture-background.jpg');
-  background-size: cover;
-  background-attachment: fixed;
-  background-position: center;
   color: var(--ink-black);
   font-family: var(--font-garamond), Georgia, serif;
   min-height: 100vh;
   position: relative;
+}
+
+/* Paper texture background with 60% opacity */
+body::after {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background-image: url('/white-paper-texture-background.jpg');
+  background-size: cover;
+  background-attachment: fixed;
+  background-position: center;
+  opacity: 0.6;
+  pointer-events: none;
+  z-index: -1;
 }
 
 /* Add subtle overlay to enhance the paper effect */

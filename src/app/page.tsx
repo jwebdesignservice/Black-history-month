@@ -135,9 +135,6 @@ export default function Home() {
             <p className="typewriter text-sm text-[var(--ink-faded)] mb-2">
               Celebrating Black History Month {new Date().getFullYear()}
             </p>
-            <p className="text-xs text-[var(--ink-faded)]">
-              Built with ❤️
-            </p>
             <div className="flex justify-center gap-2 mt-4">
               <span className="w-3 h-3 bg-[var(--accent-red)]"></span>
               <span className="w-3 h-3 bg-[var(--accent-gold)]"></span>

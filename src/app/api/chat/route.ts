@@ -185,7 +185,7 @@ export async function POST(request: NextRequest) {
     });
 
     // Always include system prompt for context
-    const fullPrompt = `${systemPrompt}\n\n---\n\nNow respond to this message in character:\n\n${message}`;
+    const fullPrompt = `${systemPrompt}\n\nIMPORTANT: Keep your response to a MAXIMUM of 75 words. Be concise but stay in character.\n\n---\n\nNow respond to this message in character:\n\n${message}`;
 
     const result = await chat.sendMessage(fullPrompt);
     const response = await result.response;
