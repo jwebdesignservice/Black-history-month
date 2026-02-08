@@ -23,8 +23,7 @@ export default function ChatBot() {
     jamaican: [],
     unfiltered: [],
     grandma: [],
-    barbershop: [],
-    poetic: []
+    barbershop: []
   });
   const [input, setInput] = useState('');
   const [isLoading, setIsLoading] = useState(false);
