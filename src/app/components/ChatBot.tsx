@@ -2,7 +2,7 @@
 
 import { useState, useRef, useEffect, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Send, Loader2, Volume2, VolumeX, Trash2, RefreshCw } from 'lucide-react';
+import { Send, Loader2, Volume2, VolumeX, Trash2, RefreshCw, Pause, Play } from 'lucide-react';
 import ModeSelector, { VoiceType, TopicType, topics } from './ModeSelector';
 
 interface VoiceData {
@@ -68,6 +68,7 @@ export default function ChatBot() {
   const [isMuted, setIsMuted] = useState(false);
   const [isHydrated, setIsHydrated] = useState(false);
   const [currentlyPlayingId, setCurrentlyPlayingId] = useState<string | null>(null);
+  const [isPaused, setIsPaused] = useState(false);
   const [showVoiceWarning, setShowVoiceWarning] = useState(false);
   const messagesContainerRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
@@ -195,6 +196,7 @@ export default function ChatBot() {
     const audio = new Audio(audioUrl);
     audioRef.current = audio;
     setCurrentlyPlayingId(messageId);
+    setIsPaused(false);
     
     setChatHistory(prev => ({
       ...prev,
@@ -207,6 +209,7 @@ export default function ChatBot() {
 
     audio.onended = () => {
       setCurrentlyPlayingId(null);
+      setIsPaused(false);
       setChatHistory(prev => ({
         ...prev,
         [historyKey]: prev[historyKey].map(msg => 
@@ -219,6 +222,7 @@ export default function ChatBot() {
 
     audio.onerror = () => {
       setCurrentlyPlayingId(null);
+      setIsPaused(false);
       setChatHistory(prev => ({
         ...prev,
         [historyKey]: prev[historyKey].map(msg => 
@@ -233,6 +237,32 @@ export default function ChatBot() {
       console.error('Audio play error:', error);
       setCurrentlyPlayingId(null);
     });
+  };
+
+  // Pause audio
+  const pauseAudio = () => {
+    if (audioRef.current) {
+      audioRef.current.pause();
+      setIsPaused(true);
+    }
+  };
+
+  // Resume audio
+  const resumeAudio = () => {
+    if (audioRef.current) {
+      audioRef.current.play().catch(console.error);
+      setIsPaused(false);
+    }
+  };
+
+  // Stop audio completely
+  const stopAudio = () => {
+    if (audioRef.current) {
+      audioRef.current.pause();
+      audioRef.current.currentTime = 0;
+      setCurrentlyPlayingId(null);
+      setIsPaused(false);
+    }
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -610,7 +640,7 @@ export default function ChatBot() {
                   ></div>
                   <p className="body-text whitespace-pre-wrap">{message.content}</p>
                   
-                  {/* Voice Status */}
+                  {/* Voice Status & Controls */}
                   {message.voiceData && (
                     <div className="mt-3 pt-3 border-t border-[var(--ink-faded)]">
                       {message.voiceData.status === 'generating' ? (
@@ -618,26 +648,71 @@ export default function ChatBot() {
                           <Loader2 className="animate-spin" size={14} />
                           <span>Generating voice...</span>
                         </div>
-                      ) : message.voiceData.status === 'playing' ? (
-                        <div className="flex items-center gap-2">
-                          <Volume2 size={14} className="text-[var(--accent-gold)]" />
-                          <span className="text-xs text-[var(--accent-gold)] font-bold">Playing...</span>
-                          <div className="flex gap-1">
-                            {[...Array(4)].map((_, i) => (
-                              <motion.div
-                                key={i}
-                                className="w-1 bg-[var(--accent-gold)] rounded"
-                                animate={{
-                                  height: ['8px', '16px', '8px'],
-                                }}
-                                transition={{
-                                  duration: 0.5,
-                                  repeat: Infinity,
-                                  delay: i * 0.1,
-                                }}
-                              />
-                            ))}
+                      ) : message.voiceData.status === 'playing' && currentlyPlayingId === message.id ? (
+                        <div className="flex items-center gap-3">
+                          {/* Pause/Play Controls */}
+                          <div className="flex items-center gap-1">
+                            {isPaused ? (
+                              <motion.button
+                                onClick={resumeAudio}
+                                whileHover={{ scale: 1.1 }}
+                                whileTap={{ scale: 0.9 }}
+                                className="p-2 bg-[var(--accent-gold)] text-[var(--ink-black)] rounded-full"
+                                title="Resume"
+                              >
+                                <Play size={14} />
+                              </motion.button>
+                            ) : (
+                              <motion.button
+                                onClick={pauseAudio}
+                                whileHover={{ scale: 1.1 }}
+                                whileTap={{ scale: 0.9 }}
+                                className="p-2 bg-[var(--accent-gold)] text-[var(--ink-black)] rounded-full"
+                                title="Pause"
+                              >
+                                <Pause size={14} />
+                              </motion.button>
+                            )}
                           </div>
+                          
+                          {/* Status indicator */}
+                          <div className="flex items-center gap-2">
+                            <Volume2 size={14} className="text-[var(--accent-gold)]" />
+                            <span className="text-xs text-[var(--accent-gold)] font-bold">
+                              {isPaused ? 'Paused' : 'Playing...'}
+                            </span>
+                            {!isPaused && (
+                              <div className="flex gap-1">
+                                {[...Array(4)].map((_, i) => (
+                                  <motion.div
+                                    key={i}
+                                    className="w-1 bg-[var(--accent-gold)] rounded"
+                                    animate={{
+                                      height: ['8px', '16px', '8px'],
+                                    }}
+                                    transition={{
+                                      duration: 0.5,
+                                      repeat: Infinity,
+                                      delay: i * 0.1,
+                                    }}
+                                  />
+                                ))}
+                              </div>
+                            )}
+                          </div>
+                        </div>
+                      ) : message.voiceData.status === 'ready' && message.voiceData.audioUrl ? (
+                        <div className="flex items-center gap-2">
+                          <motion.button
+                            onClick={() => playAudio(message.id, message.voiceData!.audioUrl!, message.topic)}
+                            whileHover={{ scale: 1.1 }}
+                            whileTap={{ scale: 0.9 }}
+                            className="p-2 bg-[var(--ink-black)] text-[var(--paper-cream)] rounded-full hover:bg-[var(--accent-gold)] hover:text-[var(--ink-black)] transition-colors"
+                            title="Play again"
+                          >
+                            <Play size={14} />
+                          </motion.button>
+                          <span className="text-xs text-[var(--ink-faded)]">Play again</span>
                         </div>
                       ) : message.voiceData.status === 'error' ? (
                         <div className="flex items-center gap-2">
