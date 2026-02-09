@@ -44,7 +44,7 @@ interface ModeSelectorProps {
 }
 
 interface VoiceInfo {
-  id: VoiceType;
+  id: Exclude<VoiceType, null>;
   name: string;
   shortName: string;
   description: string;
