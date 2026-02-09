@@ -118,7 +118,7 @@ TOPIC EXPERTISE:
 ${topicExpertise}
 
 IMPORTANT RULES:
-1. Keep responses to 2-3 sentences MAX (about 30-40 words). Be concise but informative.
+1. Keep responses to 30 words MAX. Be concise but informative.
 2. Stay in character with the voice style at all times.
 3. After answering, suggest a follow-up question or related topic to explore.
 4. Be accurate with historical facts.

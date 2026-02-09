@@ -4,6 +4,7 @@ import Timeline from './components/Timeline';
 import FactCards from './components/FactCards';
 import QuizSection from './components/QuizSection';
 import PhotoGallery from './components/PhotoGallery';
+import Blackification from './components/Blackification';
 import SocialBar from './components/SocialBar';
 import Preloader from './components/Preloader';
 
@@ -39,6 +40,27 @@ export default function Home() {
               <div className="newspaper-divider max-w-md mx-auto"></div>
             </div>
             <ChatBot />
+          </section>
+
+          {/* Section Divider */}
+          <div className="flex items-center justify-center gap-4">
+            <div className="flex-1 h-[3px] bg-[var(--ink-black)]"></div>
+            <span className="text-2xl">◆</span>
+            <div className="flex-1 h-[3px] bg-[var(--ink-black)]"></div>
+          </div>
+
+          {/* BLACKIFICATION Section */}
+          <section>
+            <div className="text-center mb-6">
+              <span className="bg-[var(--accent-green)] text-white px-4 py-1 text-sm uppercase tracking-wider">
+                AI Photo Studio
+              </span>
+              <h2 className="headline text-2xl md:text-4xl mt-4 mb-2">TRANSFORM YOUR IMAGE</h2>
+              <p className="body-text text-[var(--ink-faded)] max-w-2xl mx-auto">
+                Upload your photo and let our AI transform your background with a single click.
+              </p>
+            </div>
+            <Blackification />
           </section>
 
           {/* Section Divider */}
@@ -124,6 +146,7 @@ export default function Home() {
             </div>
             <PhotoGallery />
           </section>
+
 
         </main>
 
