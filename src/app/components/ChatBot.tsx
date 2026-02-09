@@ -276,6 +276,9 @@ export default function ChatBot() {
       return;
     }
 
+    // Stop any currently playing audio before starting new request
+    stopAudio();
+
     const userMessage: Message = {
       id: `user-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
       role: 'user',
@@ -572,8 +575,14 @@ export default function ChatBot() {
         <ModeSelector 
           currentVoice={currentVoice} 
           currentTopic={currentTopic}
-          onVoiceChange={setCurrentVoice}
-          onTopicChange={setCurrentTopic}
+          onVoiceChange={(voice) => {
+            stopAudio(); // Stop any playing audio when voice changes
+            setCurrentVoice(voice);
+          }}
+          onTopicChange={(topic) => {
+            stopAudio(); // Stop any playing audio when topic changes
+            setCurrentTopic(topic);
+          }}
         />
       </div>
 
