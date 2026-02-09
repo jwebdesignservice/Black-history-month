@@ -1,11 +1,11 @@
 import { NextRequest, NextResponse } from 'next/server';
 
 const ELEVENLABS_API_KEY = 'sk_abd760726b4fe39df06a4e23b03d3f46abbc6c828e10f374';
-const ELEVENLABS_VOICE_ID = 'SAxJUlDKRc79XAyeWyMu'; // Morgan Freeman voice
+const DEFAULT_VOICE_ID = 'SAxJUlDKRc79XAyeWyMu'; // Morgan Freeman voice
 
 export async function POST(request: NextRequest) {
   try {
-    const { text } = await request.json();
+    const { text, voiceId } = await request.json();
 
     if (!text) {
       return NextResponse.json(
@@ -14,11 +14,13 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    console.log('ElevenLabs TTS request for text:', text);
+    // Use provided voiceId or default to Morgan Freeman
+    const selectedVoiceId = voiceId || DEFAULT_VOICE_ID;
+    console.log('ElevenLabs TTS request for text:', text, 'with voice:', selectedVoiceId);
 
     // ElevenLabs Text-to-Speech API
     const response = await fetch(
-      `https://api.elevenlabs.io/v1/text-to-speech/${ELEVENLABS_VOICE_ID}`,
+      `https://api.elevenlabs.io/v1/text-to-speech/${selectedVoiceId}`,
       {
         method: 'POST',
         headers: {

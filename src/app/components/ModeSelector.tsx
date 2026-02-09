@@ -3,36 +3,48 @@
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { 
-  BookOpen, 
   Volume2, 
   Sun, 
-  Flame, 
   Heart, 
-  Scissors, 
-  Type,
   ChevronDown,
-  Music,
+  Mic2,
   Crown,
-  Mic2
+  Landmark,
+  Music2,
+  Sparkles,
+  Globe,
+  BookOpen,
+  Users,
+  Flame
 } from 'lucide-react';
 
-export type ChatMode = 
-  | 'historian' 
-  | 'streetwise'
-  | 'morgan' 
-  | 'jamaican' 
-  | 'grandma' 
-  | 'barbershop'
-  | 'hiphop'
-  | 'preacher';
+// Voice types for TTS
+export type VoiceType = 'morgan' | 'hood' | 'caribbean' | 'auntie' | null;
+
+// Topic types for learning
+export type TopicType = 
+  | 'civil_rights'
+  | 'african_empires'
+  | 'slavery_resistance'
+  | 'harlem_renaissance'
+  | 'black_inventors'
+  | 'modern_icons'
+  | 'hip_hop_culture'
+  | 'caribbean_history'
+  | 'other';
+
+// Combined mode for the chat system
+export type ChatMode = `${VoiceType}_${TopicType}`;
 
 interface ModeSelectorProps {
-  currentMode: ChatMode;
-  onModeChange: (mode: ChatMode) => void;
+  currentVoice: VoiceType;
+  currentTopic: TopicType;
+  onVoiceChange: (voice: Exclude<VoiceType, null>) => void;
+  onTopicChange: (topic: TopicType) => void;
 }
 
-interface ModeInfo {
-  id: ChatMode;
+interface VoiceInfo {
+  id: VoiceType;
   name: string;
   shortName: string;
   description: string;
@@ -40,120 +52,175 @@ interface ModeInfo {
   color: string;
 }
 
-const voiceModes: ModeInfo[] = [
+interface TopicInfo {
+  id: TopicType;
+  name: string;
+  shortName: string;
+  description: string;
+  years?: string;
+  icon: React.ReactNode;
+  color: string;
+}
+
+const voices: VoiceInfo[] = [
   {
     id: 'morgan',
-    name: 'Morgan Freeman Voice',
+    name: 'Morgan Freeman',
     shortName: 'Morgan Freeman',
-    description: 'Voice style - Calm, wise storytelling',
+    description: 'Calm, wise storytelling voice',
     icon: <Volume2 size={18} />,
     color: 'var(--accent-gold)'
-  }
-];
-
-const textModes: ModeInfo[] = [
-  {
-    id: 'historian',
-    name: 'Historian Narrator',
-    shortName: 'Historian',
-    description: 'Documentary-style wisdom - click topics to explore',
-    icon: <BookOpen size={18} />,
-    color: 'var(--accent-red)'
   },
   {
-    id: 'streetwise',
-    name: 'Street Talk',
-    shortName: 'Street',
-    description: 'Raw, unfiltered gangster energy',
-    icon: <Flame size={18} />,
+    id: 'hood',
+    name: 'Hood',
+    shortName: 'Hood',
+    description: 'Raw, authentic street energy',
+    icon: <Mic2 size={18} />,
     color: '#1a1a1a'
   },
   {
-    id: 'jamaican',
-    name: 'Jamaican Vibes',
-    shortName: 'Jamaica',
-    description: 'Caribbean patois energy',
+    id: 'caribbean',
+    name: 'Caribbean',
+    shortName: 'Caribbean',
+    description: 'Island vibes & culture',
+    icon: <Sun size={18} />,
+    color: '#00CED1'
+  },
+  {
+    id: 'auntie',
+    name: 'Auntie',
+    shortName: 'Auntie',
+    description: 'Loving but no-nonsense',
+    icon: <Heart size={18} />,
+    color: '#E91E63'
+  }
+];
+
+const topics: TopicInfo[] = [
+  {
+    id: 'civil_rights',
+    name: 'Civil Rights Movement',
+    shortName: 'Civil Rights',
+    description: 'MLK, Rosa Parks, Freedom Riders & the fight for equality',
+    years: '1954 - 1968',
+    icon: <Users size={18} />,
+    color: 'var(--accent-red)'
+  },
+  {
+    id: 'african_empires',
+    name: 'Ancient African Empires',
+    shortName: 'African Empires',
+    description: 'Mali, Songhai, Kush, Egypt & great African civilizations',
+    years: '3000 BCE - 1600s',
+    icon: <Crown size={18} />,
+    color: 'var(--accent-gold)'
+  },
+  {
+    id: 'slavery_resistance',
+    name: 'Slavery & Resistance',
+    shortName: 'Resistance',
+    description: 'Harriet Tubman, Nat Turner, Underground Railroad & rebellion',
+    years: '1619 - 1865',
+    icon: <Flame size={18} />,
+    color: '#DC2626'
+  },
+  {
+    id: 'harlem_renaissance',
+    name: 'Harlem Renaissance',
+    shortName: 'Harlem',
+    description: 'Jazz, literature, art & the cultural explosion',
+    years: '1920s - 1930s',
+    icon: <Sparkles size={18} />,
+    color: '#8B5CF6'
+  },
+  {
+    id: 'black_inventors',
+    name: 'Black Inventors & Scientists',
+    shortName: 'Inventors',
+    description: 'Garrett Morgan, Mae Jemison, George Washington Carver & more',
+    years: '1800s - Present',
+    icon: <Landmark size={18} />,
+    color: '#059669'
+  },
+  {
+    id: 'modern_icons',
+    name: 'Modern Black Icons',
+    shortName: 'Modern Icons',
+    description: 'Obama, Oprah, LeBron, Beyoncé & contemporary excellence',
+    years: '1990s - Present',
+    icon: <Globe size={18} />,
+    color: '#0EA5E9'
+  },
+  {
+    id: 'hip_hop_culture',
+    name: 'Hip-Hop & Culture',
+    shortName: 'Hip-Hop',
+    description: 'From the Bronx to global phenomenon - the culture that changed the world',
+    years: '1970s - Present',
+    icon: <Music2 size={18} />,
+    color: '#9333ea'
+  },
+  {
+    id: 'caribbean_history',
+    name: 'Caribbean History',
+    shortName: 'Caribbean',
+    description: 'Toussaint Louverture, Marcus Garvey & island independence',
+    years: '1600s - Present',
     icon: <Sun size={18} />,
     color: 'var(--accent-green)'
   },
   {
-    id: 'grandma',
-    name: 'Southern Grandma',
-    shortName: 'Grandma',
-    description: 'Warm wisdom & love',
-    icon: <Heart size={18} />,
-    color: '#D4A574'
-  },
-  {
-    id: 'barbershop',
-    name: 'Barbershop Mode',
-    shortName: 'Barbershop',
-    description: 'Debate & discussion',
-    icon: <Scissors size={18} />,
-    color: '#4A90A4'
-  },
-  {
-    id: 'hiphop',
-    name: 'Hip-Hop Head',
-    shortName: 'Hip-Hop',
-    description: 'Culture through bars & beats',
-    icon: <Music size={18} />,
-    color: '#9333ea'
-  },
-  {
-    id: 'preacher',
-    name: 'Sunday Preacher',
-    shortName: 'Preacher',
-    description: 'Black church energy & wisdom',
-    icon: <Crown size={18} />,
-    color: '#7c3aed'
+    id: 'other',
+    name: 'General Questions',
+    shortName: 'Other',
+    description: 'Ask anything about Black history & culture',
+    icon: <BookOpen size={18} />,
+    color: '#6B7280'
   }
 ];
 
-const allModes = [...voiceModes, ...textModes];
+export { voices, topics };
 
-export default function ModeSelector({ currentMode, onModeChange }: ModeSelectorProps) {
-  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
-  
-  const currentTextMode = textModes.find(m => m.id === currentMode);
-  const isTextModeSelected = !!currentTextMode;
+export default function ModeSelector({ currentVoice, currentTopic, onVoiceChange, onTopicChange }: ModeSelectorProps) {
+  const [isTopicDropdownOpen, setIsTopicDropdownOpen] = useState(false);
 
-  const handleTextModeSelect = (modeId: ChatMode) => {
-    onModeChange(modeId);
-    setIsDropdownOpen(false);
-  };
+  const currentTopicInfo = topics.find(t => t.id === currentTopic);
+  const currentVoiceInfo = voices.find(v => v.id === currentVoice);
 
   return (
     <div className="space-y-4">
       {/* Desktop Layout: Side by side */}
       <div className="hidden md:flex gap-6">
-        {/* Voice Style - Left */}
+        {/* Voice Selection - Left */}
         <div className="flex-shrink-0">
           <div className="flex items-center gap-2 text-sm mb-2">
             <Volume2 size={14} />
-            <span className="typewriter opacity-75">SELECT VOICE:</span>
+            <span className={`typewriter ${currentVoice ? 'opacity-75' : 'text-yellow-400 font-bold'}`}>
+              1. SELECT VOICE:{!currentVoice && ' ⚠️ Required'}
+            </span>
           </div>
-          <div className="flex gap-2">
-            {voiceModes.map((mode) => (
+          <div className="flex flex-wrap gap-2">
+            {voices.map((voice) => (
               <motion.button
-                key={mode.id}
-                onClick={() => onModeChange(mode.id)}
+                key={voice.id}
+                onClick={() => onVoiceChange(voice.id)}
                 whileHover={{ scale: 1.02 }}
                 whileTap={{ scale: 0.98 }}
                 className={`
-                  flex items-center gap-2 px-4 py-2 border-2 transition-all
-                  ${currentMode === mode.id 
+                  flex items-center gap-2 px-3 py-2 border-2 transition-all
+                  ${currentVoice === voice.id 
                     ? 'border-white text-white' 
                     : 'border-[var(--ink-faded)] text-[var(--ink-faded)] hover:border-white hover:text-white'
                   }
                 `}
                 style={{
-                  backgroundColor: currentMode === mode.id ? mode.color : 'transparent',
-                  boxShadow: currentMode === mode.id ? '2px 2px 0px rgba(255,255,255,0.3)' : 'none'
+                  backgroundColor: currentVoice === voice.id ? voice.color : 'transparent',
+                  boxShadow: currentVoice === voice.id ? '2px 2px 0px rgba(255,255,255,0.3)' : 'none'
                 }}
               >
-                {mode.icon}
-                <span className="font-bold text-sm">{mode.shortName}</span>
+                {voice.icon}
+                <span className="font-bold text-sm">{voice.shortName}</span>
               </motion.button>
             ))}
           </div>
@@ -162,140 +229,136 @@ export default function ModeSelector({ currentMode, onModeChange }: ModeSelector
         {/* Divider */}
         <div className="w-px bg-[var(--ink-faded)] opacity-50"></div>
 
-        {/* Text Styles - Right */}
+        {/* Topics - Right */}
         <div className="flex-1">
           <div className="flex items-center gap-2 text-sm mb-2">
-            <Type size={14} />
-            <span className="typewriter opacity-75">TEXT STYLES:</span>
+            <BookOpen size={14} />
+            <span className="typewriter opacity-75">2. SELECT TOPIC:</span>
           </div>
           <div className="flex flex-wrap gap-2">
-            {textModes.map((mode) => (
+            {topics.map((topic) => (
               <motion.button
-                key={mode.id}
-                onClick={() => onModeChange(mode.id)}
+                key={topic.id}
+                onClick={() => onTopicChange(topic.id)}
                 whileHover={{ scale: 1.02 }}
                 whileTap={{ scale: 0.98 }}
                 className={`
                   flex items-center gap-2 px-3 py-2 border-2 transition-all
-                  ${currentMode === mode.id 
+                  ${currentTopic === topic.id 
                     ? 'border-white text-white' 
                     : 'border-[var(--ink-faded)] text-[var(--ink-faded)] hover:border-white hover:text-white'
                   }
                 `}
                 style={{
-                  backgroundColor: currentMode === mode.id ? mode.color : 'transparent',
-                  boxShadow: currentMode === mode.id ? '2px 2px 0px rgba(255,255,255,0.3)' : 'none'
+                  backgroundColor: currentTopic === topic.id ? topic.color : 'transparent',
+                  boxShadow: currentTopic === topic.id ? '2px 2px 0px rgba(255,255,255,0.3)' : 'none'
                 }}
+                title={topic.description}
               >
-                {mode.icon}
-                <span className="font-bold text-sm">{mode.shortName}</span>
+                {topic.icon}
+                <span className="font-bold text-sm">{topic.shortName}</span>
               </motion.button>
             ))}
           </div>
         </div>
       </div>
 
-      {/* Mobile Layout: Stacked with Dropdown */}
+      {/* Mobile Layout: Stacked with Dropdowns */}
       <div className="md:hidden space-y-4">
-        {/* Voice Style */}
+        {/* Voice Selection */}
         <div>
           <div className="flex items-center gap-2 text-sm mb-2">
             <Volume2 size={14} />
-            <span className="typewriter opacity-75">SELECT VOICE:</span>
+            <span className={`typewriter ${currentVoice ? 'opacity-75' : 'text-yellow-400 font-bold'}`}>
+              1. SELECT VOICE:{!currentVoice && ' ⚠️ Required'}
+            </span>
           </div>
-          <div className="flex gap-2">
-            {voiceModes.map((mode) => (
+          <div className="flex flex-wrap gap-2">
+            {voices.map((voice) => (
               <motion.button
-                key={mode.id}
-                onClick={() => onModeChange(mode.id)}
+                key={voice.id}
+                onClick={() => onVoiceChange(voice.id)}
                 whileTap={{ scale: 0.95 }}
                 className={`
                   flex items-center gap-1.5 px-3 py-1.5 border-2 transition-all whitespace-nowrap
-                  ${currentMode === mode.id 
+                  ${currentVoice === voice.id 
                     ? 'border-white text-white' 
                     : 'border-[var(--ink-faded)] text-[var(--ink-faded)]'
                   }
                 `}
                 style={{
-                  backgroundColor: currentMode === mode.id ? mode.color : 'transparent'
+                  backgroundColor: currentVoice === voice.id ? voice.color : 'transparent'
                 }}
               >
-                {mode.icon}
-                <span className="text-xs font-bold">{mode.shortName}</span>
+                {voice.icon}
+                <span className="text-xs font-bold">{voice.shortName}</span>
               </motion.button>
             ))}
           </div>
         </div>
 
-        {/* Text Styles - Dropdown */}
+        {/* Topics - Dropdown */}
         <div className="relative">
           <div className="flex items-center gap-2 text-sm mb-2">
-            <Type size={14} />
-            <span className="typewriter opacity-75">TEXT STYLES:</span>
+            <BookOpen size={14} />
+            <span className="typewriter opacity-75">2. SELECT TOPIC:</span>
           </div>
           
           {/* Dropdown Button */}
           <button
-            onClick={() => setIsDropdownOpen(!isDropdownOpen)}
-            className={`
-              w-full flex items-center justify-between gap-2 px-4 py-2.5 border-2 transition-all
-              ${isTextModeSelected 
-                ? 'border-white text-white' 
-                : 'border-[var(--ink-faded)] text-[var(--ink-faded)]'
-              }
-            `}
+            onClick={() => setIsTopicDropdownOpen(!isTopicDropdownOpen)}
+            className="w-full flex items-center justify-between gap-2 px-4 py-2.5 border-2 transition-all border-white text-white"
             style={{
-              backgroundColor: isTextModeSelected ? currentTextMode?.color : 'transparent'
+              backgroundColor: currentTopicInfo?.color || 'transparent'
             }}
           >
             <div className="flex items-center gap-2">
-              {isTextModeSelected ? (
-                <>
-                  {currentTextMode?.icon}
-                  <span className="text-sm font-bold">{currentTextMode?.shortName}</span>
-                </>
-              ) : (
-                <>
-                  <Type size={18} />
-                  <span className="text-sm font-bold">Select a text style...</span>
-                </>
-              )}
+              {currentTopicInfo?.icon}
+              <div className="text-left">
+                <span className="text-sm font-bold block">{currentTopicInfo?.shortName}</span>
+                {currentTopicInfo?.years && (
+                  <span className="text-xs opacity-75">{currentTopicInfo.years}</span>
+                )}
+              </div>
             </div>
             <ChevronDown 
               size={18} 
-              className={`transition-transform ${isDropdownOpen ? 'rotate-180' : ''}`}
+              className={`transition-transform ${isTopicDropdownOpen ? 'rotate-180' : ''}`}
             />
           </button>
 
           {/* Dropdown Menu */}
           <AnimatePresence>
-            {isDropdownOpen && (
+            {isTopicDropdownOpen && (
               <motion.div
                 initial={{ opacity: 0, y: -10 }}
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, y: -10 }}
-                className="absolute z-50 w-full mt-1 bg-[var(--ink-black)] border-2 border-[var(--ink-faded)] shadow-lg"
+                className="absolute z-50 w-full mt-1 bg-[var(--ink-black)] border-2 border-[var(--ink-faded)] shadow-lg max-h-64 overflow-y-auto"
                 style={{ boxShadow: '4px 4px 0px rgba(0,0,0,0.5)' }}
               >
-                {textModes.map((mode) => (
+                {topics.map((topic) => (
                   <button
-                    key={mode.id}
-                    onClick={() => handleTextModeSelect(mode.id)}
+                    key={topic.id}
+                    onClick={() => {
+                      onTopicChange(topic.id);
+                      setIsTopicDropdownOpen(false);
+                    }}
                     className={`
                       w-full flex items-center gap-3 px-4 py-3 transition-all text-left
-                      ${currentMode === mode.id 
+                      ${currentTopic === topic.id 
                         ? 'text-white' 
                         : 'text-[var(--ink-faded)] hover:text-white hover:bg-[var(--ink-faded)]'
                       }
                     `}
                     style={{
-                      backgroundColor: currentMode === mode.id ? mode.color : 'transparent'
+                      backgroundColor: currentTopic === topic.id ? topic.color : 'transparent'
                     }}
                   >
-                    {mode.icon}
+                    {topic.icon}
                     <div className="flex-1">
-                      <span className="text-sm font-bold block">{mode.shortName}</span>
-                      <span className="text-xs opacity-75">{mode.description}</span>
+                      <span className="text-sm font-bold block">{topic.shortName}</span>
+                      <span className="text-xs opacity-75">{topic.description}</span>
                     </div>
                   </button>
                 ))}
@@ -305,14 +368,17 @@ export default function ModeSelector({ currentMode, onModeChange }: ModeSelector
         </div>
       </div>
 
-      {/* Current mode description */}
+      {/* Current selection description */}
       <motion.div
-        key={currentMode}
+        key={`${currentVoice}-${currentTopic}`}
         initial={{ opacity: 0, y: -10 }}
         animate={{ opacity: 1, y: 0 }}
-        className="text-xs typewriter opacity-75"
+        className="text-xs typewriter opacity-75 space-y-1"
       >
-        ★ {allModes.find(m => m.id === currentMode)?.description}
+        <div className={!currentVoice ? 'text-yellow-400' : ''}>
+          🎙️ Voice: {currentVoiceInfo?.description || 'Please select a voice to continue'}
+        </div>
+        <div>📚 Topic: {currentTopicInfo?.description}</div>
       </motion.div>
     </div>
   );

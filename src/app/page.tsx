@@ -5,10 +5,13 @@ import FactCards from './components/FactCards';
 import QuizSection from './components/QuizSection';
 import PhotoGallery from './components/PhotoGallery';
 import SocialBar from './components/SocialBar';
+import Preloader from './components/Preloader';
 
 export default function Home() {
   return (
     <div className="min-h-screen">
+      {/* Newspaper Preloader */}
+      <Preloader />
       {/* Social Bar - Fixed at top */}
       <SocialBar 
         contractAddress="XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX"

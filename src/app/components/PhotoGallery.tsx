@@ -16,7 +16,7 @@ interface Photo {
   credit: string;
 }
 
-// Using placeholder images - in production, these would be real historical images
+// Historical images for Black History - using local images
 const photos: Photo[] = [
   {
     id: 1,
@@ -25,17 +25,17 @@ const photos: Photo[] = [
     year: 1963,
     decade: "1950-1980",
     topic: "Civil Rights",
-    imageUrl: "https://images.unsplash.com/photo-1569025743873-ea3a9ber457f?w=600&h=400&fit=crop",
+    imageUrl: "/images/march-on-washington.webp",
     credit: "Historical Archive"
   },
   {
     id: 2,
-    title: "Harlem Renaissance Artists",
+    title: "Harlem Renaissance",
     description: "The Harlem Renaissance brought an explosion of Black art, literature, and music that defined American culture.",
     year: 1925,
     decade: "1900-1950",
     topic: "Arts",
-    imageUrl: "https://images.unsplash.com/photo-1460661419201-fd4cecdf8a8b?w=600&h=400&fit=crop",
+    imageUrl: "/images/harlem-renaissance.jpg",
     credit: "Cultural Archives"
   },
   {
@@ -45,18 +45,18 @@ const photos: Photo[] = [
     year: 1947,
     decade: "1900-1950",
     topic: "Sports",
-    imageUrl: "https://images.unsplash.com/photo-1508344928928-7165b67de128?w=600&h=400&fit=crop",
+    imageUrl: "/images/jackie-robinson.jpeg",
     credit: "Sports History Collection"
   },
   {
     id: 4,
-    title: "Obama Inauguration",
+    title: "Barack Obama",
     description: "Barack Obama was inaugurated as the 44th President of the United States, becoming the first Black president.",
     year: 2009,
     decade: "1980-present",
     topic: "Politics",
-    imageUrl: "https://images.unsplash.com/photo-1501594907352-04cda38ebc29?w=600&h=400&fit=crop",
-    credit: "Presidential Archives"
+    imageUrl: "/images/barack-obama.jpg",
+    credit: "Official White House Photo"
   },
   {
     id: 5,
@@ -65,48 +65,48 @@ const photos: Photo[] = [
     year: 1943,
     decade: "1900-1950",
     topic: "Science",
-    imageUrl: "https://images.unsplash.com/photo-1540575467063-178a50c2df87?w=600&h=400&fit=crop",
-    credit: "Military History Archives"
+    imageUrl: "/images/tuskegee-airmen.jpg",
+    credit: "U.S. Air Force Archives"
   },
   {
     id: 6,
-    title: "Montgomery Bus Boycott",
-    description: "After Rosa Parks' arrest, Black residents boycotted Montgomery buses for 381 days.",
+    title: "Rosa Parks",
+    description: "Rosa Parks' refusal to give up her bus seat sparked the Montgomery Bus Boycott that lasted 381 days.",
     year: 1955,
     decade: "1950-1980",
     topic: "Civil Rights",
-    imageUrl: "https://images.unsplash.com/photo-1544620347-c4fd4a3d5957?w=600&h=400&fit=crop",
+    imageUrl: "/images/rosa-parks.jfif",
     credit: "Civil Rights Museum"
   },
   {
     id: 7,
-    title: "Jazz Age Innovation",
-    description: "Black musicians revolutionized American music, creating jazz in New Orleans and spreading it nationwide.",
-    year: 1920,
+    title: "Duke Ellington",
+    description: "Duke Ellington revolutionized American music, becoming one of the most influential jazz composers in history.",
+    year: 1943,
     decade: "1900-1950",
     topic: "Arts",
-    imageUrl: "https://images.unsplash.com/photo-1415201364774-f6f0bb35f28f?w=600&h=400&fit=crop",
+    imageUrl: "/images/duke-ellington.jfif",
     credit: "Music Archives"
   },
   {
     id: 8,
-    title: "Black Power Olympics",
-    description: "Tommie Smith and John Carlos raised their fists in a Black Power salute at the 1968 Olympics.",
+    title: "1968 Olympics Black Power Salute",
+    description: "Tommie Smith and John Carlos raised their fists in a Black Power salute at the 1968 Olympics in Mexico City.",
     year: 1968,
     decade: "1950-1980",
     topic: "Sports",
-    imageUrl: "https://images.unsplash.com/photo-1461896836934- voices-0ba47c1?w=600&h=400&fit=crop",
+    imageUrl: "/images/olympics-1968.webp",
     credit: "Olympic Archives"
   },
   {
     id: 9,
-    title: "Shirley Chisholm for President",
-    description: "Shirley Chisholm became the first Black woman to seek a major party's nomination for President.",
+    title: "Shirley Chisholm",
+    description: "Shirley Chisholm became the first Black woman elected to Congress and first to seek a major party's presidential nomination.",
     year: 1972,
     decade: "1950-1980",
     topic: "Politics",
-    imageUrl: "https://images.unsplash.com/photo-1529107386315-e1a2ed48a620?w=600&h=400&fit=crop",
-    credit: "Political History Archives"
+    imageUrl: "/images/shirley-chisholm.webp",
+    credit: "U.S. Congress Archives"
   },
   {
     id: 10,
@@ -115,28 +115,28 @@ const photos: Photo[] = [
     year: 1992,
     decade: "1980-present",
     topic: "Science",
-    imageUrl: "https://images.unsplash.com/photo-1446776811953-b23d57bd21aa?w=600&h=400&fit=crop",
+    imageUrl: "/images/mae-jemison.jpg",
     credit: "NASA Archives"
   },
   {
     id: 11,
-    title: "Abolition Movement",
-    description: "Harriet Tubman, Frederick Douglass, and other abolitionists fought to end slavery in America.",
-    year: 1850,
+    title: "Frederick Douglass",
+    description: "Frederick Douglass escaped slavery to become a leading abolitionist, orator, and statesman.",
+    year: 1855,
     decade: "1800s",
     topic: "Civil Rights",
-    imageUrl: "https://images.unsplash.com/photo-1590012314607-cda9d9b699ae?w=600&h=400&fit=crop",
+    imageUrl: "/images/frederick-douglass.webp",
     credit: "Historical Society"
   },
   {
     id: 12,
-    title: "Hip Hop Revolution",
-    description: "Hip hop emerged from the Bronx in the 1970s and grew into a global cultural movement.",
-    year: 1979,
-    decade: "1950-1980",
-    topic: "Arts",
-    imageUrl: "https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=600&h=400&fit=crop",
-    credit: "Music History Archives"
+    title: "Harriet Tubman",
+    description: "Harriet Tubman escaped slavery and led hundreds to freedom via the Underground Railroad.",
+    year: 1868,
+    decade: "1800s",
+    topic: "Civil Rights",
+    imageUrl: "/images/harriet-tubman.webp",
+    credit: "Historical Society"
   }
 ];
 
@@ -279,15 +279,17 @@ export default function PhotoGallery() {
               className="group cursor-pointer"
               onClick={() => setSelectedPhoto(photo)}
             >
-              <div className="border-[3px] border-[var(--ink-black)] overflow-hidden bg-white relative">
+              <div className="border-[3px] border-[var(--ink-black)] overflow-hidden bg-[var(--paper-aged)] relative">
                 {/* Halftone overlay effect */}
                 <div className="relative aspect-[4/3] overflow-hidden halftone">
-                  <div 
-                    className="w-full h-full bg-cover bg-center transition-transform duration-300 group-hover:scale-110"
+                  <img 
+                    src={photo.imageUrl}
+                    alt={photo.title}
+                    className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-110"
                     style={{ 
-                      backgroundImage: `url(${photo.imageUrl})`,
                       filter: 'grayscale(30%) contrast(1.1)'
                     }}
+                    loading="lazy"
                   />
                   
                   {/* Hover overlay */}
@@ -368,10 +370,11 @@ export default function PhotoGallery() {
 
               {/* Image */}
               <div className="aspect-video relative halftone">
-                <div 
-                  className="w-full h-full bg-cover bg-center"
+                <img 
+                  src={selectedPhoto.imageUrl}
+                  alt={selectedPhoto.title}
+                  className="w-full h-full object-cover"
                   style={{ 
-                    backgroundImage: `url(${selectedPhoto.imageUrl})`,
                     filter: 'grayscale(20%) contrast(1.05)'
                   }}
                 />
