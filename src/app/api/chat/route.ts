@@ -1,4 +1,4 @@
-import { GoogleGenerativeAI } from '@google/generative-ai';
+import OpenAI from 'openai';
 import { NextRequest, NextResponse } from 'next/server';
 
 type ChatMode = 
@@ -146,50 +146,50 @@ export async function POST(request: NextRequest) {
   try {
     const { message, mode, history } = await request.json();
 
-    if (!process.env.GEMINI_API_KEY || process.env.GEMINI_API_KEY === 'your_gemini_api_key_here') {
+    if (!process.env.OPENAI_API_KEY) {
       return NextResponse.json(
-        { response: "⚠️ Hey! The chatbot isn't set up yet. To get me working, you need to:\n\n1. Go to https://aistudio.google.com/app/apikey and get a FREE API key\n2. Create a file called '.env.local' in the project root folder\n3. Add this line: GEMINI_API_KEY=your_actual_key_here\n4. Restart the dev server (npm run dev)\n\nOnce that's done, I'll be ready to chat!" }
+        { response: "⚠️ Hey! The chatbot isn't set up yet. To get me working, you need to add your OpenAI API key to the .env.local file:\n\nOPENAI_API_KEY=your_key_here\n\nThen restart the dev server." }
       );
     }
 
-    const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
-    const model = genAI.getGenerativeModel({ model: 'gemini-2.5-flash' });
+    const openai = new OpenAI({
+      apiKey: process.env.OPENAI_API_KEY,
+    });
 
-    // Build conversation history - filter to ensure it starts with user message
-    let historyFormatted = history?.map((msg: { role: string; content: string }) => ({
-      role: msg.role === 'assistant' ? 'model' : 'user',
-      parts: [{ text: msg.content }]
-    })) || [];
+    // Build conversation history for OpenAI format
+    const systemPrompt = systemPrompts[mode as ChatMode] || systemPrompts.historian;
+    
+    const messages: OpenAI.Chat.Completions.ChatCompletionMessageParam[] = [
+      {
+        role: 'system',
+        content: `${systemPrompt}\n\nIMPORTANT: Keep your response to a MAXIMUM of 15 words. Be concise but stay in character.`
+      }
+    ];
 
-    // Ensure history starts with a user message (Gemini requirement)
-    while (historyFormatted.length > 0 && historyFormatted[0].role === 'model') {
-      historyFormatted = historyFormatted.slice(1);
-    }
-
-    // Also ensure alternating pattern - remove consecutive same-role messages
-    const cleanedHistory: typeof historyFormatted = [];
-    for (const msg of historyFormatted) {
-      if (cleanedHistory.length === 0 || cleanedHistory[cleanedHistory.length - 1].role !== msg.role) {
-        cleanedHistory.push(msg);
+    // Add conversation history
+    if (history && Array.isArray(history)) {
+      for (const msg of history.slice(-10)) {
+        messages.push({
+          role: msg.role === 'assistant' ? 'assistant' : 'user',
+          content: msg.content
+        });
       }
     }
 
-    // Create chat with system prompt embedded in first message
-    const systemPrompt = systemPrompts[mode as ChatMode] || systemPrompts.historian;
-    
-    const chat = model.startChat({
-      history: cleanedHistory,
-      generationConfig: {
-        maxOutputTokens: 1024,
-      },
+    // Add current message
+    messages.push({
+      role: 'user',
+      content: message
     });
 
-    // Always include system prompt for context
-    const fullPrompt = `${systemPrompt}\n\nIMPORTANT: Keep your response to a MAXIMUM of 75 words. Be concise but stay in character.\n\n---\n\nNow respond to this message in character:\n\n${message}`;
+    const completion = await openai.chat.completions.create({
+      model: 'gpt-4o-mini',
+      messages,
+      max_tokens: 256,
+      temperature: 0.8,
+    });
 
-    const result = await chat.sendMessage(fullPrompt);
-    const response = await result.response;
-    const responseText = response.text();
+    const responseText = completion.choices[0]?.message?.content || "I apologize, I couldn't generate a response.";
 
     return NextResponse.json({ response: responseText });
   } catch (error: unknown) {

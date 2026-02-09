@@ -2,14 +2,21 @@
 
 import { useState, useRef, useEffect, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Send, Loader2, Volume2, VolumeX, Trash2 } from 'lucide-react';
+import { Send, Loader2, Volume2, VolumeX, Trash2, Play, Pause, RefreshCw } from 'lucide-react';
 import ModeSelector, { ChatMode } from './ModeSelector';
+
+interface VoiceData {
+  status: 'idle' | 'generating' | 'ready' | 'playing' | 'error';
+  audioUrl?: string;
+  error?: string;
+}
 
 interface Message {
   id: string;
   role: 'user' | 'assistant';
   content: string;
   mode: ChatMode;
+  voiceData?: VoiceData;
 }
 
 type ChatHistory = Record<ChatMode, Message[]>;
@@ -35,8 +42,10 @@ export default function ChatBot() {
   const [currentMode, setCurrentMode] = useState<ChatMode>('historian');
   const [isMuted, setIsMuted] = useState(true);
   const [isHydrated, setIsHydrated] = useState(false);
+  const [currentlyPlayingId, setCurrentlyPlayingId] = useState<string | null>(null);
   const messagesContainerRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
+  const audioRef = useRef<HTMLAudioElement | null>(null);
 
   // Get current messages for the active mode - with fallback to empty array
   const messages = chatHistory[currentMode] || [];
@@ -53,10 +62,16 @@ export default function ChatBot() {
           ...defaultHistory,
           ...parsed
         };
-        // Ensure each mode has an array (not undefined)
+        // Ensure each mode has an array and regenerate IDs to avoid duplicates
         for (const mode of Object.keys(defaultHistory) as ChatMode[]) {
           if (!Array.isArray(mergedHistory[mode])) {
             mergedHistory[mode] = [];
+          } else {
+            // Regenerate IDs for old messages to ensure uniqueness
+            mergedHistory[mode] = mergedHistory[mode].map((msg, index) => ({
+              ...msg,
+              id: `${msg.role}-${mode}-${index}-${Math.random().toString(36).substr(2, 9)}`
+            }));
           }
         }
         setChatHistory(mergedHistory);
@@ -101,12 +116,407 @@ export default function ChatBot() {
     }));
   };
 
+  // Generate Morgan Freeman voice for a message
+  const generateVoice = async (messageId: string, textContent: string) => {
+    // Update message to show generating status
+    setChatHistory(prev => ({
+      ...prev,
+      [currentMode]: prev[currentMode].map(msg => 
+        msg.id === messageId 
+          ? { ...msg, voiceData: { status: 'generating' as const } }
+          : msg
+      )
+    }));
+
+    try {
+      // First, we need to convert text to speech using a TTS service
+      // For ModelsLab voice_cover, we need an audio URL as input
+      // We'll use the browser's SpeechSynthesis API to generate base audio first
+      const utterance = new SpeechSynthesisUtterance(textContent);
+      utterance.rate = 0.9;
+      utterance.pitch = 0.8;
+      
+      // Create audio context for recording
+      const audioContext = new (window.AudioContext || (window as unknown as { webkitAudioContext: typeof AudioContext }).webkitAudioContext)();
+      const dest = audioContext.createMediaStreamDestination();
+      const mediaRecorder = new MediaRecorder(dest.stream);
+      const chunks: Blob[] = [];
+
+      mediaRecorder.ondataavailable = (e) => chunks.push(e.data);
+      
+      // Use a promise to handle the async nature
+      const audioBlob = await new Promise<Blob>((resolve, reject) => {
+        mediaRecorder.onstop = () => {
+          const blob = new Blob(chunks, { type: 'audio/webm' });
+          resolve(blob);
+        };
+
+        utterance.onend = () => {
+          setTimeout(() => mediaRecorder.stop(), 100);
+        };
+
+        utterance.onerror = (e) => {
+          reject(new Error(`Speech synthesis error: ${e.error}`));
+        };
+
+        mediaRecorder.start();
+        window.speechSynthesis.speak(utterance);
+        
+        // Timeout fallback
+        setTimeout(() => {
+          if (mediaRecorder.state === 'recording') {
+            mediaRecorder.stop();
+          }
+        }, 30000);
+      });
+
+      // Convert blob to base64 for API
+      const reader = new FileReader();
+      const base64Audio = await new Promise<string>((resolve, reject) => {
+        reader.onloadend = () => resolve(reader.result as string);
+        reader.onerror = reject;
+        reader.readAsDataURL(audioBlob);
+      });
+
+      // Call our voice API
+      const response = await fetch('/api/voice', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          audioUrl: base64Audio,
+          text: textContent
+        })
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to generate voice');
+      }
+
+      const data = await response.json();
+      
+      // Check response for audio URL
+      const audioUrl = data.output?.[0] || data.audio_url || data.output;
+      
+      if (audioUrl) {
+        setChatHistory(prev => ({
+          ...prev,
+          [currentMode]: prev[currentMode].map(msg => 
+            msg.id === messageId 
+              ? { ...msg, voiceData: { status: 'ready' as const, audioUrl } }
+              : msg
+          )
+        }));
+      } else if (data.status === 'processing' || data.status === 'queued') {
+        // API is still processing, poll for result
+        pollForVoiceResult(messageId, data.id || data.request_id);
+      } else {
+        throw new Error('No audio URL in response');
+      }
+    } catch (error) {
+      console.error('Voice generation error:', error);
+      setChatHistory(prev => ({
+        ...prev,
+        [currentMode]: prev[currentMode].map(msg => 
+          msg.id === messageId 
+            ? { ...msg, voiceData: { status: 'error' as const, error: error instanceof Error ? error.message : 'Failed to generate voice' } }
+            : msg
+        )
+      }));
+    }
+  };
+
+  // Poll for voice generation result
+  const pollForVoiceResult = async (messageId: string, requestId: string) => {
+    const maxAttempts = 30;
+    let attempts = 0;
+
+    const poll = async () => {
+      if (attempts >= maxAttempts) {
+        setChatHistory(prev => ({
+          ...prev,
+          [currentMode]: prev[currentMode].map(msg => 
+            msg.id === messageId 
+              ? { ...msg, voiceData: { status: 'error' as const, error: 'Voice generation timed out' } }
+              : msg
+          )
+        }));
+        return;
+      }
+
+      try {
+        const response = await fetch(`/api/voice/status?id=${requestId}`);
+        const data = await response.json();
+
+        if (data.status === 'completed' || data.status === 'success') {
+          const audioUrl = data.output?.[0] || data.audio_url || data.output;
+          setChatHistory(prev => ({
+            ...prev,
+            [currentMode]: prev[currentMode].map(msg => 
+              msg.id === messageId 
+                ? { ...msg, voiceData: { status: 'ready' as const, audioUrl } }
+                : msg
+            )
+          }));
+        } else if (data.status === 'failed' || data.status === 'error') {
+          throw new Error(data.message || 'Voice generation failed');
+        } else {
+          // Still processing, poll again
+          attempts++;
+          setTimeout(poll, 2000);
+        }
+      } catch (error) {
+        console.error('Polling error:', error);
+        setChatHistory(prev => ({
+          ...prev,
+          [currentMode]: prev[currentMode].map(msg => 
+            msg.id === messageId 
+              ? { ...msg, voiceData: { status: 'error' as const, error: error instanceof Error ? error.message : 'Polling failed' } }
+              : msg
+          )
+        }));
+      }
+    };
+
+    await poll();
+  };
+
+  // Auto-generate and play voice for Morgan Freeman mode
+  const autoGenerateAndPlayVoice = async (messageId: string, textContent: string) => {
+    // Update message to show generating status
+    setChatHistory(prev => ({
+      ...prev,
+      [currentMode]: prev[currentMode].map(msg => 
+        msg.id === messageId 
+          ? { ...msg, voiceData: { status: 'generating' as const } }
+          : msg
+      )
+    }));
+
+    try {
+      // Call our voice API
+      const response = await fetch('/api/voice', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          text: textContent
+        })
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to generate voice');
+      }
+
+      const data = await response.json();
+      
+      // Check response for audio URL
+      const audioUrl = data.output?.[0] || data.audio_url || data.output;
+      
+      if (audioUrl) {
+        setChatHistory(prev => ({
+          ...prev,
+          [currentMode]: prev[currentMode].map(msg => 
+            msg.id === messageId 
+              ? { ...msg, voiceData: { status: 'ready' as const, audioUrl } }
+              : msg
+          )
+        }));
+
+        // Auto-play the audio
+        const audio = new Audio(audioUrl);
+        audioRef.current = audio;
+        setCurrentlyPlayingId(messageId);
+        
+        setChatHistory(prev => ({
+          ...prev,
+          [currentMode]: prev[currentMode].map(msg => 
+            msg.id === messageId && msg.voiceData
+              ? { ...msg, voiceData: { ...msg.voiceData, status: 'playing' as const } }
+              : msg
+          )
+        }));
+
+        audio.onended = () => {
+          setCurrentlyPlayingId(null);
+          setChatHistory(prev => ({
+            ...prev,
+            [currentMode]: prev[currentMode].map(msg => 
+              msg.id === messageId && msg.voiceData
+                ? { ...msg, voiceData: { ...msg.voiceData, status: 'ready' as const } }
+                : msg
+            )
+          }));
+        };
+
+        audio.onerror = () => {
+          setCurrentlyPlayingId(null);
+          setChatHistory(prev => ({
+            ...prev,
+            [currentMode]: prev[currentMode].map(msg => 
+              msg.id === messageId && msg.voiceData
+                ? { ...msg, voiceData: { ...msg.voiceData, status: 'error' as const, error: 'Failed to play audio' } }
+                : msg
+            )
+          }));
+        };
+
+        audio.play().catch((error) => {
+          console.error('Audio autoplay error:', error);
+          setCurrentlyPlayingId(null);
+        });
+
+      } else if (data.status === 'processing' || data.status === 'queued') {
+        // API is still processing, poll for result then auto-play
+        pollForVoiceResultAndPlay(messageId, data.id || data.request_id);
+      } else {
+        throw new Error('No audio URL in response');
+      }
+    } catch (error) {
+      console.error('Voice generation error:', error);
+      setChatHistory(prev => ({
+        ...prev,
+        [currentMode]: prev[currentMode].map(msg => 
+          msg.id === messageId 
+            ? { ...msg, voiceData: { status: 'error' as const, error: error instanceof Error ? error.message : 'Failed to generate voice' } }
+            : msg
+        )
+      }));
+    }
+  };
+
+  // Poll for voice result and auto-play when ready
+  const pollForVoiceResultAndPlay = async (messageId: string, requestId: string) => {
+    const maxAttempts = 30;
+    let attempts = 0;
+
+    const poll = async () => {
+      if (attempts >= maxAttempts) {
+        setChatHistory(prev => ({
+          ...prev,
+          [currentMode]: prev[currentMode].map(msg => 
+            msg.id === messageId 
+              ? { ...msg, voiceData: { status: 'error' as const, error: 'Voice generation timed out' } }
+              : msg
+          )
+        }));
+        return;
+      }
+
+      try {
+        const response = await fetch(`/api/voice/status?id=${requestId}`);
+        const data = await response.json();
+
+        if (data.status === 'completed' || data.status === 'success') {
+          const audioUrl = data.output?.[0] || data.audio_url || data.output;
+          setChatHistory(prev => ({
+            ...prev,
+            [currentMode]: prev[currentMode].map(msg => 
+              msg.id === messageId 
+                ? { ...msg, voiceData: { status: 'ready' as const, audioUrl } }
+                : msg
+            )
+          }));
+
+          // Auto-play
+          if (audioUrl) {
+            const audio = new Audio(audioUrl);
+            audioRef.current = audio;
+            setCurrentlyPlayingId(messageId);
+            audio.play().catch(console.error);
+          }
+        } else if (data.status === 'failed' || data.status === 'error') {
+          throw new Error(data.message || 'Voice generation failed');
+        } else {
+          // Still processing, poll again
+          attempts++;
+          setTimeout(poll, 2000);
+        }
+      } catch (error) {
+        console.error('Polling error:', error);
+        setChatHistory(prev => ({
+          ...prev,
+          [currentMode]: prev[currentMode].map(msg => 
+            msg.id === messageId 
+              ? { ...msg, voiceData: { status: 'error' as const, error: error instanceof Error ? error.message : 'Polling failed' } }
+              : msg
+          )
+        }));
+      }
+    };
+
+    await poll();
+  };
+
+  // Play/Pause audio
+  const toggleAudio = (messageId: string, audioUrl: string) => {
+    if (currentlyPlayingId === messageId && audioRef.current) {
+      // Pause current audio
+      audioRef.current.pause();
+      setCurrentlyPlayingId(null);
+      setChatHistory(prev => ({
+        ...prev,
+        [currentMode]: prev[currentMode].map(msg => 
+          msg.id === messageId && msg.voiceData
+            ? { ...msg, voiceData: { ...msg.voiceData, status: 'ready' as const } }
+            : msg
+        )
+      }));
+    } else {
+      // Stop any currently playing audio
+      if (audioRef.current) {
+        audioRef.current.pause();
+      }
+
+      // Play new audio
+      const audio = new Audio(audioUrl);
+      audioRef.current = audio;
+      setCurrentlyPlayingId(messageId);
+      
+      setChatHistory(prev => ({
+        ...prev,
+        [currentMode]: prev[currentMode].map(msg => 
+          msg.id === messageId && msg.voiceData
+            ? { ...msg, voiceData: { ...msg.voiceData, status: 'playing' as const } }
+            : msg
+        )
+      }));
+
+      audio.onended = () => {
+        setCurrentlyPlayingId(null);
+        setChatHistory(prev => ({
+          ...prev,
+          [currentMode]: prev[currentMode].map(msg => 
+            msg.id === messageId && msg.voiceData
+              ? { ...msg, voiceData: { ...msg.voiceData, status: 'ready' as const } }
+              : msg
+          )
+        }));
+      };
+
+      audio.onerror = () => {
+        setCurrentlyPlayingId(null);
+        setChatHistory(prev => ({
+          ...prev,
+          [currentMode]: prev[currentMode].map(msg => 
+            msg.id === messageId && msg.voiceData
+              ? { ...msg, voiceData: { ...msg.voiceData, status: 'error' as const, error: 'Failed to play audio' } }
+              : msg
+          )
+        }));
+      };
+
+      audio.play().catch((error) => {
+        console.error('Audio play error:', error);
+        setCurrentlyPlayingId(null);
+      });
+    }
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!input.trim() || isLoading) return;
 
     const userMessage: Message = {
-      id: Date.now().toString(),
+      id: `user-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
       role: 'user',
       content: input.trim(),
       mode: currentMode
@@ -135,8 +545,67 @@ export default function ChatBot() {
 
       const data = await response.json();
       
+      const messageId = `assistant-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
+      
+      // For voice modes, generate voice FIRST, then show text + play audio together
+      if (currentMode === 'morgan' || currentMode === 'historian') {
+        try {
+          // Generate voice before showing the message
+          const voiceResponse = await fetch('/api/voice', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ text: data.response })
+          });
+
+          if (voiceResponse.ok) {
+            const voiceData = await voiceResponse.json();
+            const audioUrl = voiceData.output?.[0] || voiceData.audio_url;
+            
+            if (audioUrl) {
+              // Create audio element and prepare it
+              const audio = new Audio(audioUrl);
+              audioRef.current = audio;
+              
+              // Now show the message AND play audio at the same time
+              const assistantMessage: Message = {
+                id: messageId,
+                role: 'assistant',
+                content: data.response,
+                mode: currentMode,
+                voiceData: { status: 'playing' as const, audioUrl }
+              };
+
+              setChatHistory(prev => ({
+                ...prev,
+                [currentMode]: [...prev[currentMode], assistantMessage]
+              }));
+
+              setCurrentlyPlayingId(messageId);
+              
+              audio.onended = () => {
+                setCurrentlyPlayingId(null);
+                setChatHistory(prev => ({
+                  ...prev,
+                  [currentMode]: prev[currentMode].map(msg => 
+                    msg.id === messageId && msg.voiceData
+                      ? { ...msg, voiceData: { ...msg.voiceData, status: 'ready' as const } }
+                      : msg
+                  )
+                }));
+              };
+
+              audio.play().catch(console.error);
+              return; // Exit early, we've handled everything
+            }
+          }
+        } catch (voiceError) {
+          console.error('Voice generation failed:', voiceError);
+        }
+      }
+
+      // Fallback: show message without voice (for non-voice modes or if voice failed)
       const assistantMessage: Message = {
-        id: (Date.now() + 1).toString(),
+        id: messageId,
         role: 'assistant',
         content: data.response,
         mode: currentMode
@@ -149,7 +618,7 @@ export default function ChatBot() {
     } catch (error) {
       console.error('Chat error:', error);
       const errorMessage: Message = {
-        id: (Date.now() + 1).toString(),
+        id: `error-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
         role: 'assistant',
         content: "My apologies, I'm having trouble connecting right now. Please try again in a moment.",
         mode: currentMode
@@ -315,6 +784,52 @@ export default function ChatBot() {
                     style={{ backgroundColor: getModeColor(message.mode) }}
                   ></div>
                   <p className="body-text whitespace-pre-wrap">{message.content}</p>
+                  
+                  {/* Voice Status - Auto-plays for Morgan Freeman and Historian modes */}
+                  {(message.mode === 'morgan' || message.mode === 'historian') && message.voiceData && (
+                    <div className="mt-3 pt-3 border-t border-[var(--ink-faded)]">
+                      {message.voiceData.status === 'generating' ? (
+                        <div className="flex items-center gap-2 text-xs text-[var(--ink-faded)]">
+                          <Loader2 className="animate-spin" size={14} />
+                          <span>Generating voice...</span>
+                        </div>
+                      ) : message.voiceData.status === 'playing' ? (
+                        <div className="flex items-center gap-2">
+                          <Volume2 size={14} className="text-[var(--accent-gold)]" />
+                          <span className="text-xs text-[var(--accent-gold)] font-bold">Playing...</span>
+                          <div className="flex gap-1">
+                            {[...Array(4)].map((_, i) => (
+                              <motion.div
+                                key={i}
+                                className="w-1 bg-[var(--accent-gold)] rounded"
+                                animate={{
+                                  height: ['8px', '16px', '8px'],
+                                }}
+                                transition={{
+                                  duration: 0.5,
+                                  repeat: Infinity,
+                                  delay: i * 0.1,
+                                }}
+                              />
+                            ))}
+                          </div>
+                        </div>
+                      ) : message.voiceData.status === 'error' ? (
+                        <div className="flex items-center gap-2">
+                          <span className="text-xs text-red-500">{message.voiceData.error}</span>
+                          <motion.button
+                            onClick={() => generateVoice(message.id, message.content)}
+                            whileHover={{ scale: 1.05 }}
+                            whileTap={{ scale: 0.95 }}
+                            className="flex items-center gap-1 px-2 py-1 bg-[var(--ink-faded)] text-white text-xs rounded"
+                          >
+                            <RefreshCw size={12} />
+                            Retry
+                          </motion.button>
+                        </div>
+                      ) : null}
+                    </div>
+                  )}
                 </div>
               )}
             </motion.div>
