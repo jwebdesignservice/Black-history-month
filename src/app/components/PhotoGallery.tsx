@@ -75,7 +75,7 @@ const photos: Photo[] = [
     year: 1955,
     decade: "1950-1980",
     topic: "Civil Rights",
-    imageUrl: "/images/rosa-parks.jfif",
+    imageUrl: "/images/rosa-parks.jpg",
     credit: "Civil Rights Museum"
   },
   {
@@ -85,7 +85,7 @@ const photos: Photo[] = [
     year: 1943,
     decade: "1900-1950",
     topic: "Arts",
-    imageUrl: "/images/duke-ellington.jfif",
+    imageUrl: "/images/duke-ellington.jpg",
     credit: "Music Archives"
   },
   {
@@ -281,7 +281,7 @@ export default function PhotoGallery() {
             >
               <div className="border-[3px] border-[var(--ink-black)] overflow-hidden bg-[var(--paper-aged)] relative">
                 {/* Halftone overlay effect */}
-                <div className="relative aspect-[4/3] overflow-hidden halftone">
+                <div className="relative aspect-[4/3] overflow-hidden halftone bg-[var(--ink-faded)]">
                   <img 
                     src={photo.imageUrl}
                     alt={photo.title}
@@ -289,7 +289,11 @@ export default function PhotoGallery() {
                     style={{ 
                       filter: 'grayscale(30%) contrast(1.1)'
                     }}
-                    loading="lazy"
+                    loading="eager"
+                    onError={(e) => {
+                      const target = e.target as HTMLImageElement;
+                      target.style.display = 'none';
+                    }}
                   />
                   
                   {/* Hover overlay */}
