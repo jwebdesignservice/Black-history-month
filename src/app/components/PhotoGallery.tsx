@@ -279,25 +279,22 @@ export default function PhotoGallery() {
               className="group cursor-pointer"
               onClick={() => setSelectedPhoto(photo)}
             >
-              <div className="border-[3px] border-[var(--ink-black)] overflow-hidden bg-[var(--paper-aged)] relative">
-                {/* Halftone overlay effect */}
-                <div className="relative aspect-[4/3] overflow-hidden halftone bg-[var(--ink-faded)]">
+              <div className="border-[3px] border-[var(--ink-black)] overflow-hidden relative">
+                {/* Fixed aspect ratio container */}
+                <div className="relative w-full overflow-hidden" style={{ paddingTop: '75%', backgroundColor: 'transparent' }}>
+                  {/* Image positioned absolutely to fill container */}
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
                   <img 
                     src={photo.imageUrl}
                     alt={photo.title}
-                    className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-110"
+                    className="absolute top-0 left-0 w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
                     style={{ 
                       filter: 'grayscale(30%) contrast(1.1)'
                     }}
-                    loading="eager"
-                    onError={(e) => {
-                      const target = e.target as HTMLImageElement;
-                      target.style.display = 'none';
-                    }}
                   />
                   
-                  {/* Hover overlay */}
-                  <div className="absolute inset-0 bg-[var(--ink-black)] bg-opacity-0 group-hover:bg-opacity-50 transition-all flex items-center justify-center">
+                  {/* Hover overlay - only shows on hover */}
+                  <div className="absolute inset-0 bg-transparent group-hover:bg-black/50 transition-all flex items-center justify-center">
                     <ZoomIn className="text-white opacity-0 group-hover:opacity-100 transition-opacity" size={32} />
                   </div>
                 </div>
